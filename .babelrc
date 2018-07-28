@@ -1,0 +1,13 @@
+{
+  "plugins": [
+    "transform-runtime",
+    "syntax-dynamic-import",
+    "transform-decorators-legacy",
+    ["import", { "libraryName": "antd", "libraryDirectory": "es", "style": "css" }]
+  ],
+  "presets": [
+    "env",
+    "react",
+    "stage-0"
+  ]
+}
