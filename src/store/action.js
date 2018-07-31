@@ -1,6 +1,6 @@
-import { fetchApps } from '../services/api';
+import { fetchApps, fetchApp } from '../services/api';
 
-export const fetchAppsAction = (value) => {
+export const fetchAppsAction = () => {
     return async dispatch => {
         let { err, data } = await fetchApps();
         if (!err) {
@@ -11,3 +11,16 @@ export const fetchAppsAction = (value) => {
         }
     };
 }
+
+export const fetchAppAction = (appid) => {
+    return async dispatch => {
+        let { err, data } = await fetchApp(appid);
+        if (!err) {
+            dispatch({
+                type: 'onFetchApp',
+                value: data
+            });
+        }
+    };
+}
+
