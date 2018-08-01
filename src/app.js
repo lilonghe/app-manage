@@ -9,7 +9,7 @@ export default class App extends Component {
     render() {
         return (
             <Router>
-                <MainLayout>
+                <MainLayout key={window.location.href}>
                     <Switch>
                         <Route exact path='/' component={IndexPage} />
                         <Route path='/apps/:appId' component={AppDetailPage} />

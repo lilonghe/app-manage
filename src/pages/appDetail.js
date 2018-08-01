@@ -9,6 +9,8 @@ const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
 import { Link, Route,BrowserRouter as Router, Switch } from 'react-router-dom';
 import InfoPage from './app/info';
+import PermissionPage from './app/permission';
+import RolePage from './app/role';
 
 @connect(({ apps: { targetApp } }) => {
     return { targetApp }
@@ -55,36 +57,36 @@ export default class appDetail extends Component {
             return <LoadingComponent />
         }
         return (
-            <div className={styles.appDetailWapper} style={{minHeight: window.innerHeight - 200}}>
-                <Layout>
-                    <Sider width={180} style={{ background: '#fff' }}>
-                        <div className={styles.appInfo}>
-                            <img src={targetApp.icon} />
-                            <div>
-                                <p className={styles.appName}>{targetApp.name}</p>
+            <Router>
+                <div className={styles.appDetailWapper} style={{minHeight: window.innerHeight - 120}}>
+                    <Layout>
+                        <Sider width={180} style={{ background: '#fff' }}>
+                            <div className={styles.appInfo}>
+                                <img src={targetApp.icon} />
+                                <div>
+                                    <p className={styles.appName}>{targetApp.name}</p>
+                                </div>
                             </div>
-                        </div>
-                    <Menu
-                        mode="inline"
-                        selectedKeys={[path]}
-                        onSelect={this.onSelectMenu}
-                        style={{ height: '100%', borderRight: 0 }}
-                    >
-                        <Menu.Item key={'info'}><Link to={`/apps/${targetApp.appid}/info`}>应用信息</Link></Menu.Item>
-                        <Menu.Item key={'permissions'}><Link to={`/apps/${targetApp.appid}/permissions`}>权限管理</Link></Menu.Item>
-                        <Menu.Item key={'roles'}><Link to={`/apps/${targetApp.appid}/roles`}>角色管理</Link></Menu.Item>
-                        <Menu.Item key={'menus'}><Link to={`/apps/${targetApp.appid}/menus`}>菜单管理</Link></Menu.Item>
-                    </Menu>
-                    </Sider>
-                    <Content style={{marginLeft: 20, paddingTop: 20}}>
-                        <Router>
-                            <Switch>
-                                <Route path={'/apps/:appId/info'} component={InfoPage} />
-                            </Switch>
-                        </Router>
-                    </Content>
-                </Layout>
-            </div>
+                            <Menu
+                                mode="inline"
+                                selectedKeys={[path]}
+                                onSelect={this.onSelectMenu}
+                                style={{ borderRight: 0 }}
+                            >
+                                <Menu.Item key={'info'}><Link to={`/apps/${targetApp.appid}/info`}>应用信息</Link></Menu.Item>
+                                <Menu.Item key={'permissions'}><Link to={`/apps/${targetApp.appid}/permissions`}>权限管理</Link></Menu.Item>
+                                <Menu.Item key={'roles'}><Link to={`/apps/${targetApp.appid}/roles`}>角色管理</Link></Menu.Item>
+                                <Menu.Item key={'menus'}><Link to={`/apps/${targetApp.appid}/menus`}>菜单管理</Link></Menu.Item>
+                            </Menu>
+                        </Sider>
+                        <Content style={{marginLeft: 20, paddingTop: 20}}>
+                            <Route exact path={'/apps/:appId/info'} component={InfoPage} />
+                            <Route path='/apps/:appId/permissions' component={PermissionPage}/>
+                            <Route path='/apps/:appId/roles' component={RolePage}/>
+                        </Content>
+                    </Layout>
+                </div>
+            </Router>
         )
     }
 }

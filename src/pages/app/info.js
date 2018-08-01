@@ -42,7 +42,8 @@ export default class appDetail extends Component {
             <div className={styles.appInfo}>
                 <img src={targetApp.icon} />
                 <div>
-                    <p className={styles.appName}>{targetApp.name}</p>
+                    <div className={styles.appName}>{targetApp.name}</div>
+                    <div className={styles.appid}>@{targetApp.appid}</div>
                     <div className={styles.description}>{targetApp.description}</div>
                 </div>
             </div>
