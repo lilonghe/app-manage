@@ -7,3 +7,7 @@ export function fetchApps() {
 export function fetchApp(appid) {
     return request(`apps/${appid}`);
 }
+
+export function fetchAppRoles(appid) {
+    return request(`apps/${appid}/roles`);
+}

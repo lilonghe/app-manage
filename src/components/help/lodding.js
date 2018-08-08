@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 const loadingStyle = {
     textAlign: 'center',
     fontSize: 20
-}
+};
 
 export default class loading extends Component {
     render() {

@@ -9,8 +9,8 @@ const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
 import { Link } from 'react-router-dom';
 
-@connect(({ apps: { targetApp } }) => {
-    return { targetApp }
+@connect(({ appDetail }) => {
+    return { appDetail }
 }, {
     fetchAppAction
 })
@@ -34,17 +34,17 @@ export default class appDetail extends Component {
     }
 
     render() {
-        const { targetApp } = this.props;
-        if (!targetApp.name) {
+        const { appDetail: { info } } = this.props;
+        if (!info.name) {
             return <LoadingComponent />
         }
         return (
             <div className={styles.appInfo}>
-                <img src={targetApp.icon} />
+                <img src={info.icon} />
                 <div>
-                    <div className={styles.appName}>{targetApp.name}</div>
-                    <div className={styles.appid}>@{targetApp.appid}</div>
-                    <div className={styles.description}>{targetApp.description}</div>
+                    <div className={styles.appName}>{info.name}</div>
+                    <div className={styles.appid}>@{info.appid}</div>
+                    <div className={styles.description}>{info.description}</div>
                 </div>
             </div>
         )

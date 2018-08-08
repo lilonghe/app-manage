@@ -1,9 +1,25 @@
 import React, { Component } from 'react';
 import { Select, Form, Icon, Input, Button, Checkbox, Popconfirm } from 'antd';
+import { connect } from 'react-redux';
 const FormItem = Form.Item;
+import { fetchAppRolesAction } from '../../store/action';
+import RoleForm from '../../components/app/role/RoleForm';
 
-@Form.create()
+@connect(({ appDetail }) => {
+    return { appDetail }
+}, {
+    fetchAppRolesAction
+})
 export default class role extends Component {
+
+    state = {
+        targetRole: {}
+    }
+
+    componentDidMount() {
+        const { appDetail: { info } } = this.props;
+        this.props.fetchAppRolesAction(info.appid);
+    }
 
     handleSubmit = (e) => {
         e.preventDefault();
@@ -14,95 +30,26 @@ export default class role extends Component {
         });
     }
 
-    render() {
-        const { getFieldDecorator } = this.props.form;
-        const formItemLayout = {
-            labelCol: {
-                xs: { span: 24 },
-                sm: { span: 4 },
-            },
-            wrapperCol: {
-                xs: { span: 24 },
-                sm: { span: 16 },
-            },
-        };
-        const tailFormItemLayout = {
-            wrapperCol: {
-                xs: {
-                    span: 24,
-                    offset: 0,
-                },
-                sm: {
-                    span: 16,
-                    offset: 4,
-                },
-            },
-        };
+    changeTargetRole = (val) => {
+       const { appDetail: { roles } } = this.props;
+       let role = roles.find(r => r.id == val);
+       this.setState({
+           targetRole: role || {}
+       })
+    }
 
+    render() {
+        const { appDetail: { roles } } = this.props;
         return (
             <div>
-
-
-                <Form style={{marginTop: 20}} onSubmit={this.handleSubmit}>
-                    <FormItem
-                        {...tailFormItemLayout}
-                    >
-                        <Select placeholder={'选择角色操作'}></Select>
-                    </FormItem>
-                    <FormItem
-                        {...formItemLayout}
-                        label="Id"
-                    >
-                        <span>10</span>
-                    </FormItem>
-                    <FormItem
-                        {...formItemLayout}
-                        label="Code"
-                    >
-                        {getFieldDecorator('code', {
-                            rules: [{
-                                pattern: /^[A-Za-z_]{1,20}$/, message: '字母或下换线, 最多20个字符'
-                            }, {
-                                required: true, message: '未输入 code',
-                            }],
-                        })(
-                            <Input placeholder={'唯一代码'}/>
-                        )}
-                    </FormItem>
-                    <FormItem
-                        {...formItemLayout}
-                        label="名称"
-                    >
-                        {getFieldDecorator('name', {
-                            rules: [{
-                                max: 20, message: '最多20个字符'
-                            },{
-                                required: true, message: '未输入名称',
-                            }],
-                        })(
-                            <Input placeholder={'名称'}/>
-                        )}
-                    </FormItem>
-                    <FormItem
-                        {...formItemLayout}
-                        label="简介"
-                    >
-                        {getFieldDecorator('description', {
-                            rules: [{
-                                max: 120, message: '最多120个字符'
-                            }],
-                        })(
-                            <Input.TextArea  placeholder={'简要介绍'}/>
-                        )}
-                    </FormItem>
-                    <FormItem
-                        {...tailFormItemLayout}
-                    >
-                        <Button type="primary" htmlType="submit" className="login-form-button">
-                            保存
-                        </Button>
-                    </FormItem>
-                </Form>
+                <Select 
+                    allowClear
+                    placeholder={'选择角色操作'} 
+                    onChange={this.changeTargetRole} 
+                    style={{minWidth: 300, marginLeft: '16.5%'}}>
+                    { roles.map(role => <Select.Option value={role.id}>{role.name}</Select.Option>)}
+                </Select>
+                <RoleForm key={this.state.targetRole.id} targetRole={this.state.targetRole}  />
             </div>
         );
     }

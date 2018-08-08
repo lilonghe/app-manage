@@ -59,8 +59,8 @@ export default class appDetail extends Component {
         return (
             <Router>
                 <div className={styles.appDetailWapper} style={{minHeight: window.innerHeight - 120}}>
-                    <Layout>
-                        <Sider width={180} style={{ background: '#fff' }}>
+                    <Layout style={{backgroundColor: '#FFF'}}>
+                        <Sider width={180} style={{ background: '#fff', borderRight: '1px solid #DDD' }}>
                             <div className={styles.appInfo}>
                                 <img src={targetApp.icon} />
                                 <div>
