@@ -1,4 +1,4 @@
-import { fetchApps, fetchApp, fetchAppRoles, addApp,getAppPermissions} from '../services/api';
+import { fetchApps, fetchApp, fetchAppRoles, addApp, getAppPermissions} from '../services/api';
 import actionTypes from './actionTypes';
 
 export const fetchAppsAction = () => {
@@ -13,9 +13,9 @@ export const fetchAppsAction = () => {
     };
 };
 
-export const addAppAction = (cb) => {
+export const addAppAction = (params, cb) => {
     return async dispatch => {
-        let { err, data } = await addApp();
+        let { err, data } = await addApp(params);
         if (!err) {
             cb && cb();
         }

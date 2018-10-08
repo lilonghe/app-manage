@@ -1,19 +1,21 @@
 import React,{ Component } from 'react';
-import { List, Avatar, Input } from 'antd';
+import { List, Avatar, Input, Button, message } from 'antd';
 import { connect } from 'react-redux';
-import { fetchAppsAction } from '../store/action';
+import { fetchAppsAction,addAppAction } from '../store/action';
 import { Link } from 'react-router-dom';
 import styles from './index.styl';
+import InfoForm from '../components/app/infoForm';
 
 @connect(({ apps }) => {
     return { apps }
-}, { fetchAppsAction })
+}, { fetchAppsAction,addAppAction })
 export default class index extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            keyword: ''
+            keyword: '',
+            showInfoForm: false
         }
     }
 
@@ -32,11 +34,38 @@ export default class index extends Component {
         })
     }
 
+
+    handleSubmit = () => {
+        const form = this.formRef.props.form;
+        form.validateFields((err, values) => {
+            if (!err) {
+                console.log('Received values of form: ', values);
+                this.props.addAppAction({...values}, (err) => {
+                    if (!err) {
+                        message.success('添加成功');
+                        this.props.fetchAppsAction();
+                    }
+                })
+            }
+        })
+    }
+
+    saveFormRef = (formRef) => {
+        this.formRef = formRef;
+    }
+
+    toggleShowInfoForm = () => {
+        this.setState({
+            showInfoForm: !this.state.showInfoForm
+        })
+    }
+
     render() {
         const { apps: { list } } = this.props;
         const appsView = this.filterApps(this.state.keyword, list)
         return (
             <div className={styles.appListWrapper}>
+                <Button onClick={this.toggleShowInfoForm}>添加应用</Button>
                 <Input onChange={this.changeKeyword} placeholder={"输入关键词查询"} />
                 <List
                     dataSource={appsView}
@@ -49,6 +78,14 @@ export default class index extends Component {
                             />
                         </List.Item>
                     )}/>
+
+
+                <InfoForm 
+                    visible={this.state.showInfoForm} 
+                    onCancel={this.toggleShowInfoForm}
+                    wrappedComponentRef={this.saveFormRef} 
+                    onOk={this.handleSubmit} 
+                    title="添加应用" />
             </div>
         )
     }
