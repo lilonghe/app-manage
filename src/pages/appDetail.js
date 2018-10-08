@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchAppAction } from '../store/action';
+import { fetchAppAction, chooseAppAction } from '../store/action';
 import LoadingComponent from '../components/help/lodding';
 import pathToRegexp from 'path-to-regexp';
 import styles from './appDetail.styl';
@@ -15,7 +15,7 @@ import RolePage from './app/role';
 @connect(({ apps: { targetApp } }) => {
     return { targetApp }
 }, {
-    fetchAppAction
+    fetchAppAction, chooseAppAction
 })
 export default class appDetail extends Component {
 
@@ -23,11 +23,11 @@ export default class appDetail extends Component {
         path: ''
     }
 
-    loadApp = (newPath) => {
+    loadApp = async (newPath) => {
         const reg = pathToRegexp('/apps/:appId/(.*)');
         const match = reg.exec(newPath || window.location.pathname);
         this.appid = match[1];
-        console.log(match[2]);
+        await this.props.chooseAppAction(this.appid)
         this.setState({
             path: match[2]
         });

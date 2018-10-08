@@ -1,4 +1,4 @@
-import { fetchApps, fetchApp, fetchAppRoles, addApp} from '../services/api';
+import { fetchApps, fetchApp, fetchAppRoles, addApp,getAppPermissions} from '../services/api';
 import actionTypes from './actionTypes';
 
 export const fetchAppsAction = () => {
@@ -45,3 +45,24 @@ export const fetchAppRolesAction = (appid) => {
         }
     };
 };
+
+export const fetchAppPermissionAction = (appid) => {
+    return async dispatch => {
+        let { err, data } = await getAppPermissions(appid);
+        if (!err) {
+            dispatch({
+                type: actionTypes.onFetchAppPermission,
+                value: data
+            });
+        }
+    };
+};
+
+export const chooseAppAction = (appid) => {
+    return async dispatch => {
+        dispatch({
+            type: actionTypes.onChooseApp,
+            value: appid
+        });
+    }
+}

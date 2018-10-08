@@ -3,4 +3,6 @@ export default {
     onFetchApp: 'onFetchApp',
     onFetchAppRoles: 'onFetchAppRoles',
     onAddApp: 'onAddApp',
+    onFetchAppPermission: 'onFetchAppPermission',
+    onChooseApp: 'onChooseApp'
 };

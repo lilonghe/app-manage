@@ -1,15 +1,35 @@
 import React, { Component } from 'react';
-import { Table, Col, Tabs } from 'antd';
+import { Table, Col, Tabs, Switch } from 'antd';
 const { Column } = Table.Column;
 const TabPane = Tabs.TabPane;
 import PermissionForm from '../../components/app/permission/permissionForm';
+import { connect } from 'react-redux';
+import { fetchAppPermissionAction } from '../../store/action';
 
+@connect(({ appDetail }) => {
+    return { appDetail }
+}, {
+    fetchAppPermissionAction
+})
 export default class appDetail extends Component {
 
     constructor(props){
         super(props);
         this.state = {
             showPermissionForm: true
+        }
+    }
+
+    componentDidMount() {
+        const { appDetail: { appid } } = this.props;
+        if (appid) {
+            this.props.fetchAppPermissionAction(appid)
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (this.props.appDetail.appid != nextProps.appDetail.appid) {
+            this.props.fetchAppPermissionAction(nextProps.appDetail.appid)
         }
     }
 
@@ -34,32 +54,15 @@ export default class appDetail extends Component {
     }
 
     render() {
+        const { appDetail: { permissions } } = this.props;
         return (
             <div>
-                {/* <Tabs defaultActiveKey="1" > */}
-                    {/* <TabPane tab="菜单" key="1"> */}
-                        <Table>
-                            <Column title="title" />
-                            <Column title="Code" />
-                            <Column title="type" />
-                            <Column title="public" />
-                        </Table>
-                    {/* </TabPane>
-                    <TabPane tab="权限" key="2">
-                        <Table>
-                            <Column title="title" />
-                            <Column title="Code" />
-                            <Column title="public" />
-                        </Table>
-                    </TabPane>
-                </Tabs> */}
-                
-
-                <PermissionForm 
-                    title="添加权限"
-                    visible={this.state.showPermissionForm}
-                    wrappedComponentRef={this.saveFormRef}
-                    onOk={this.onSubmit}  />
+                <Table dataSource={permissions}>
+                    <Column title="title" dataIndex="title" />
+                    <Column title="Code" dataIndex="code"  />
+                    <Column title="type"  dataIndex="type"  />
+                    <Column title="public"  dataIndex="public" render={(t) => <Switch checked={t} />}  />
+                </Table>
             </div>
         );
     }
