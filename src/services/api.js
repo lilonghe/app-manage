@@ -11,3 +11,7 @@ export function fetchApp(appid) {
 export function fetchAppRoles(appid) {
     return request(`apps/${appid}/roles`);
 }
+
+export function addApp(data) {
+    return request(`app`, { method: 'post', body: JSON.stringify(data)})
+}

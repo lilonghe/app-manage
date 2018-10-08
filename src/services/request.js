@@ -1,6 +1,6 @@
 import qs from 'qs';
 import 'whatwg-fetch';
-const host = 'http://rap2api.taobao.org/app/mock/24484/';
+const host = 'http://localhost:3000/';
 
 const request = async (url, options) => {
     if (!options) {
@@ -29,6 +29,9 @@ const request = async (url, options) => {
         }
     }).
         then((response) => response.json().then((data) => {
+            if (data.errcode != 0) {
+                return { err: data.errmsg, data };
+            }
             return { data: data.data };
         })).
         catch((err) => {

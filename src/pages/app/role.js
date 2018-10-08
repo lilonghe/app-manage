@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Select, Form, Icon, Input, Button, Checkbox, Popconfirm } from 'antd';
+import { Select, Form, Icon, Input, Button, Checkbox, Popconfirm, Table } from 'antd';
 import { connect } from 'react-redux';
 const FormItem = Form.Item;
+const  { Column } = Table.Column;
 import { fetchAppRolesAction } from '../../store/action';
 import RoleForm from '../../components/app/role/RoleForm';
 
@@ -13,7 +14,8 @@ import RoleForm from '../../components/app/role/RoleForm';
 export default class role extends Component {
 
     state = {
-        targetRole: {}
+        targetRole: {},
+        showRoleForm: false
     }
 
     componentDidMount() {
@@ -31,25 +33,68 @@ export default class role extends Component {
     }
 
     changeTargetRole = (val) => {
-       const { appDetail: { roles } } = this.props;
-       let role = roles.find(r => r.id == val);
-       this.setState({
-           targetRole: role || {}
-       })
+        console.log(val);
+        if (val) {
+            const { appDetail: { roles } } = this.props;
+            let role = roles.find(r => r.id == val);
+            this.setState({
+                targetRole: role || {}
+            });
+        } else {
+            this.setState({
+                targetRole: {}
+            });
+        }
+      
+       this.toggleShowRoleForm();
+    }
+
+    toggleShowRoleForm = () => {
+        this.setState({
+            showRoleForm: !this.state.showRoleForm
+        })
+    }
+
+    saveFormRef = (formRef) => {
+        this.formRef = formRef;
+    }
+
+    onSubmit = () => {
+        const form = this.formRef.props.form;
+        form.validateFields((err, values) => {
+            if (err) {
+                return;
+            }
+            console.log(values);
+        })
     }
 
     render() {
         const { appDetail: { roles } } = this.props;
         return (
             <div>
-                <Select 
-                    allowClear
-                    placeholder={'选择角色操作'} 
-                    onChange={this.changeTargetRole} 
-                    style={{minWidth: 300, marginLeft: '16.5%'}}>
-                    { roles.map(role => <Select.Option value={role.id}>{role.name}</Select.Option>)}
-                </Select>
-                <RoleForm key={this.state.targetRole.id} targetRole={this.state.targetRole}  />
+                <Icon type="file-add" theme="outlined" style={{cursor: 'pointer'}} onClick={this.changeTargetRole}/>
+                <Table dataSource={roles} pagination={false}>
+                    <Column title="name" dataIndex="name" />
+                    <Column title="code" dataIndex="code" />
+                    <Column title="description" dataIndex="description" />
+                    <Column title="user count" dataIndex="count" />
+                    <Column title="action" render={(t, r) => {
+                        return <div>
+                            <Icon type="edit" style={{cursor: 'pointer'}} onClick={() => this.changeTargetRole(r.id)}/>
+                            <div style={{width: 20, display:'inline-block'}}></div>
+                            <Icon type="close" />
+                        </div>
+                    }} />
+                </Table>
+
+                <RoleForm 
+                    targetRole={this.state.targetRole}
+                    visible={this.state.showRoleForm} 
+                    onCancel={this.toggleShowRoleForm}
+                    wrappedComponentRef={this.saveFormRef} 
+                    onOk={this.onSubmit} 
+                    title="添加角色" />
             </div>
         );
     }

@@ -1,9 +1,9 @@
-import React, {  Component } from "React";
-import {Modal, Form, Input} from 'antd';
+import React, { Component } from 'react';
+import { Form } from 'antd';
 const FormItem = Form.Item;
 
 @Form.create()
-export default class CustomerModal extends Component {
+export default class extends Component {
     render() {
         const { form } = this.props;
         const { getFieldDecorator } = form;
@@ -19,16 +19,10 @@ export default class CustomerModal extends Component {
             },
         };
 
-        const { targetRole = {} } = this.props;
         return (
-            <Modal visible={visible} onOk={onOk} onCancel={onCancel} title={title}>
+            <div>
+                <h2>创建应用</h2>
                 <Form>
-                { targetRole.id && <FormItem
-                        {...formItemLayout}
-                        label="Id"
-                    >
-                        <span>{targetRole.id}</span>
-                    </FormItem> }
                     <FormItem
                         {...formItemLayout}
                         label="名称"
@@ -46,34 +40,21 @@ export default class CustomerModal extends Component {
                     </FormItem>
                     <FormItem
                         {...formItemLayout}
-                        label="Code"
-                    >
-                        {getFieldDecorator('code', {
-                            rules: [{
-                                pattern: /^[A-Za-z_]{1,20}$/, message: '字母或下换线, 最多20个字符'
-                            }, {
-                                required: true, message: '未输入 code',
-                            }],
-                            initialValue: targetRole.code
-                        })(
-                            <Input placeholder={'唯一代码'}/>
-                        )}
-                    </FormItem>
-                    <FormItem
-                        {...formItemLayout}
                         label="简介"
                     >
                         {getFieldDecorator('description', {
                             rules: [{
-                                max: 120, message: '最多120个字符'
+                                max: 20, message: '最多20个字符'
+                            },{
+                                required: true, message: '未输入简介',
                             }],
-                            initialValue: targetRole.description
+                            initialValue: targetRole.name
                         })(
-                            <Input.TextArea  placeholder={'简要介绍'}/>
+                            <Input placeholder={'简介'}/>
                         )}
                     </FormItem>
                 </Form>
-            </Modal>
+            </div>
         )
     }
 }

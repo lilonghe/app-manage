@@ -79,7 +79,7 @@ export default class appDetail extends Component {
                                 <Menu.Item key={'menus'}><Link to={`/apps/${targetApp.appid}/menus`}>菜单管理</Link></Menu.Item>
                             </Menu>
                         </Sider>
-                        <Content style={{marginLeft: 20, paddingTop: 20}}>
+                        <Content style={{marginLeft: 20}}>
                             <Route exact path={'/apps/:appId/info'} component={InfoPage} />
                             <Route path='/apps/:appId/permissions' component={PermissionPage}/>
                             <Route path='/apps/:appId/roles' component={RolePage}/>

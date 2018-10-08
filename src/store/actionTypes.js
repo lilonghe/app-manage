@@ -1,5 +1,6 @@
 export default {
     onFetchApps: 'onFetchApps',
     onFetchApp: 'onFetchApp',
-    onFetchAppRoles: 'onFetchAppRoles'
+    onFetchAppRoles: 'onFetchAppRoles',
+    onAddApp: 'onAddApp',
 };
