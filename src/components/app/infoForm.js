@@ -66,6 +66,8 @@ export default class CustomerModal extends Component {
                         {getFieldDecorator('description', {
                             rules: [{
                                 max: 120, message: '最多120个字符'
+                            },{
+                                required: true, message: '未输入介绍',
                             }],
                             initialValue: targetRole.description
                         })(

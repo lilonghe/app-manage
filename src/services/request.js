@@ -1,5 +1,6 @@
 import qs from 'qs';
 import 'whatwg-fetch';
+import { message } from 'antd';
 const host = 'http://localhost:3000/';
 
 const request = async (url, options) => {
@@ -30,6 +31,7 @@ const request = async (url, options) => {
     }).
         then((response) => response.json().then((data) => {
             if (data.errcode != 0) {
+                message.error(`[${data.errcode}] ${data.errmsg}`)
                 return { err: data.errmsg, data };
             }
             return { data: data.data };
