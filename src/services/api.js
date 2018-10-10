@@ -19,3 +19,15 @@ export function fetchAppRoles(appid) {
 export function getAppPermissions(appid) {
     return request(`permissions/${appid}`);
 }
+
+export function addAppPermission(data) {
+    return request(`permission`, {method: 'post', body: JSON.stringify(data)});
+}
+
+export function addAppRole(data) {
+    return request(`role`, {method: 'post', body: JSON.stringify(data)});
+}
+
+export function editAppRole(data) {
+    return request(`role`, {method: 'patch', body: JSON.stringify(data)});
+}

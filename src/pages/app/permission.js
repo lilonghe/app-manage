@@ -1,36 +1,41 @@
 import React, { Component } from 'react';
-import { Table, Col, Tabs, Switch } from 'antd';
+import { Table, Col, Tabs, Switch, Icon, message } from 'antd';
 const { Column } = Table.Column;
 const TabPane = Tabs.TabPane;
 import PermissionForm from '../../components/app/permission/permissionForm';
 import { connect } from 'react-redux';
-import { fetchAppPermissionAction } from '../../store/action';
+import { fetchAppPermissionAction, addAppPermissionAction } from '../../store/action';
+import { arrToTree } from '../../utils/tools';
 
 @connect(({ appDetail }) => {
     return { appDetail }
 }, {
-    fetchAppPermissionAction
+    fetchAppPermissionAction, addAppPermissionAction
 })
-export default class appDetail extends Component {
+export default class AppPermission extends Component {
 
     constructor(props){
         super(props);
         this.state = {
-            showPermissionForm: true
+            showPermissionForm: false
         }
     }
 
     componentDidMount() {
         const { appDetail: { appid } } = this.props;
         if (appid) {
-            this.props.fetchAppPermissionAction(appid)
+            this.loadPermission(appid)
         }
     }
 
     componentWillReceiveProps(nextProps) {
         if (this.props.appDetail.appid != nextProps.appDetail.appid) {
-            this.props.fetchAppPermissionAction(nextProps.appDetail.appid)
+            this.loadPermission(nextProps.appDetail.appid)
         }
+    }
+
+    loadPermission = (appid) => {
+        this.props.fetchAppPermissionAction(appid)
     }
 
     toggleShowPermissionForm = () => {
@@ -46,23 +51,41 @@ export default class appDetail extends Component {
     onSubmit = () => {
         const form = this.formRef.props.form;
         form.validateFields((err, values) => {
-            if (err) {
+            if (!err) {
+                this.props.addAppPermissionAction({...values, appid: this.props.appDetail.appid}, ({ err,data }) => {
+                    if(!err) {
+                        this.toggleShowPermissionForm();
+                        message.success('添加成功');
+                        this.loadPermission(this.props.appDetail.appid);
+                    }
+                })
                 return;
             }
-            console.log(values);
         })
     }
 
     render() {
         const { appDetail: { permissions } } = this.props;
+        const menusTree = arrToTree({arr: permissions})
+
+        const columns = [
+            {dataIndex: 'title', title: '标题'},
+            {dataIndex: 'code', title: 'code'},
+            {dataIndex: 'type', title: '类型'},
+            {dataIndex: 'public', title: '公开', render: t => <Switch checked={t} />},
+            {dataIndex: 'description', title: '简介'},
+        ]
         return (
             <div>
-                <Table dataSource={permissions}>
-                    <Column title="title" dataIndex="title" />
-                    <Column title="Code" dataIndex="code"  />
-                    <Column title="type"  dataIndex="type"  />
-                    <Column title="public"  dataIndex="public" render={(t) => <Switch checked={t} />}  />
-                </Table>
+                <Icon type="file-add" theme="outlined" style={{cursor: 'pointer'}} onClick={this.toggleShowPermissionForm}/> <span>共 {permissions.length} 项</span>
+                <Table size="small" bordered={false} rowKey={r => r._id} dataSource={menusTree} pagination={false} columns={columns} />
+
+                {this.state.showPermissionForm && <PermissionForm visible={this.state.showPermissionForm} 
+                    onCancel={this.toggleShowPermissionForm}
+                    wrappedComponentRef={this.saveFormRef} 
+                    onOk={this.onSubmit} 
+                    title="添加权限" 
+                    menusTree={menusTree} />}
             </div>
         );
     }

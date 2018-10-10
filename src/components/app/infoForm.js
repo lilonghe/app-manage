@@ -1,9 +1,9 @@
-import React, {  Component } from "React";
+import React, {  Component } from "react";
 import {Modal, Form, Input} from 'antd';
 const FormItem = Form.Item;
 
 @Form.create()
-export default class CustomerModal extends Component {
+export default class InfoFormModal extends Component {
     render() {
         const { form } = this.props;
         const { getFieldDecorator } = form;

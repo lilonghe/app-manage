@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import { Select, Form, Icon, Input, Button, Checkbox, Popconfirm, Table } from 'antd';
+import { Select, Form, Icon, Input, Button, Checkbox, Popconfirm, Table, message } from 'antd';
 import { connect } from 'react-redux';
 const FormItem = Form.Item;
 const  { Column } = Table.Column;
-import { fetchAppRolesAction } from '../../store/action';
+import { fetchAppRolesAction,addAppRoleAction,editAppRoleAction } from '../../store/action';
 import RoleForm from '../../components/app/role/RoleForm';
 
 @connect(({ appDetail }) => {
     return { appDetail }
 }, {
-    fetchAppRolesAction
+    fetchAppRolesAction, addAppRoleAction,editAppRoleAction
 })
 export default class role extends Component {
 
@@ -32,16 +32,16 @@ export default class role extends Component {
         });
     }
 
-    changeTargetRole = (val) => {
+    changeTargetRole = async (val) => {
         console.log(val);
         if (val) {
             const { appDetail: { roles } } = this.props;
-            let role = roles.find(r => r.id == val);
-            this.setState({
+            let role = roles.find(r => r._id == val);
+            await this.setState({
                 targetRole: role || {}
             });
         } else {
-            this.setState({
+            await this.setState({
                 targetRole: {}
             });
         }
@@ -62,10 +62,23 @@ export default class role extends Component {
     onSubmit = () => {
         const form = this.formRef.props.form;
         form.validateFields((err, values) => {
-            if (err) {
-                return;
+            if (!err) {
+                const { appDetail: { appid } } = this.props;
+                if(this.state.targetRole._id) {
+                    this.props.editAppRoleAction({...values, _id: this.state.targetRole._id, appid}, ({ err }) => {
+                        if(!err) {
+                            message.success('编辑角色成功');
+                        }
+                    })
+                } else {
+                    this.props.addAppRoleAction({...values, appid}, ({ err }) => {
+                        if(!err) {
+                            message.success('添加角色成功');
+                        }
+                    })
+                }
+               
             }
-            console.log(values);
         })
     }
 
@@ -81,20 +94,20 @@ export default class role extends Component {
                     <Column title="user count" dataIndex="count" />
                     <Column title="action" render={(t, r) => {
                         return <div>
-                            <Icon type="edit" style={{cursor: 'pointer'}} onClick={() => this.changeTargetRole(r.id)}/>
+                            <Icon type="edit" style={{cursor: 'pointer'}} onClick={() => this.changeTargetRole(r._id)}/>
                             <div style={{width: 20, display:'inline-block'}}></div>
                             <Icon type="close" />
                         </div>
                     }} />
                 </Table>
 
-                <RoleForm 
+                {this.state.showRoleForm && <RoleForm 
                     targetRole={this.state.targetRole}
                     visible={this.state.showRoleForm} 
                     onCancel={this.toggleShowRoleForm}
                     wrappedComponentRef={this.saveFormRef} 
                     onOk={this.onSubmit} 
-                    title="添加角色" />
+                    title={this.state.targetRole ? "编辑角色":"添加角色"} /> }
             </div>
         );
     }

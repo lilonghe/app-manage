@@ -1,30 +1,43 @@
-import React, {  Component } from "React";
-import {Modal, Form, Input, Switch, Radio} from 'antd';
+import React, {  Component } from "react";
+import {Modal, Form, Input, Switch, Radio, TreeSelect} from 'antd';
 const FormItem = Form.Item;
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
+const TreeNode = TreeSelect.TreeNode;
 
 
 @Form.create()
-export default class CustomerModal extends Component {
+export default class PermissionFormModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            typeSimple: false
+            typeSimple: false,
+            typeName: 'menu',
         }
     }
     
     changeMenuType = (e) => {
         if (e.target.value == "permission") {
             this.setState({
-                typeSimple: true
+                typeSimple: true,
+                typeName: e.target.value
             })
         } else {
             this.setState({
-                typeSimple: false
+                typeSimple: false,
+                typeName: e.target.value
             })
         }
     }
+    
+    loopTreeNode = (data) => data.map((item) => {
+        if(item.children) {
+            return <TreeNode value={item._id} title={item.title} key={item._id}>
+                {this.loopTreeNode(item.children)}
+            </TreeNode>
+        }
+        return <TreeNode value={item._id} title={item.title}  key={item._id}/>
+    })
 
     render() {
         const { form } = this.props;
@@ -41,8 +54,9 @@ export default class CustomerModal extends Component {
             },
         };
 
-        const { targetPermission = {} } = this.props;
-        const { typeSimple } = this.state;
+        const { targetPermission = {}, menusTree } = this.props;
+        const { typeSimple, typeName } = this.state;
+        const treeDom = this.loopTreeNode(menusTree);
         return (
             <Modal visible={visible} onOk={onOk} onCancel={onCancel} title={title}>
                 <Form>
@@ -56,13 +70,13 @@ export default class CustomerModal extends Component {
                         {...formItemLayout}
                         label="名称"
                     >
-                        {getFieldDecorator('name', {
+                        {getFieldDecorator('title', {
                             rules: [{
                                 max: 20, message: '最多20个字符'
                             },{
                                 required: true, message: '未输入名称',
                             }],
-                            initialValue: targetPermission.name
+                            initialValue: targetPermission.title
                         })(
                             <Input placeholder={'名称'}/>
                         )}
@@ -73,7 +87,7 @@ export default class CustomerModal extends Component {
                     >
                         {getFieldDecorator('code', {
                             rules: [{
-                                pattern: /^[A-Za-z_]{1,20}$/, message: '字母或下换线, 最多20个字符'
+                                pattern: /^[A-Za-z_][A-Za-z_0-9]{1,20}$/, message: '非数字开头的字符串, 最多20个字符'
                             }, {
                                 required: true, message: '未输入 code',
                             }],
@@ -86,7 +100,7 @@ export default class CustomerModal extends Component {
                         {...formItemLayout}
                         label="公开"
                     >
-                        {getFieldDecorator('description', {
+                        {getFieldDecorator('public', {
                             initialValue: targetPermission.public
                         })(
                             <Switch />
@@ -96,7 +110,7 @@ export default class CustomerModal extends Component {
                         {...formItemLayout}
                         label="类型"
                     >
-                        {getFieldDecorator('description', {
+                        {getFieldDecorator('type', {
                             initialValue: targetPermission.type || 'menu'
                         })(
                             <RadioGroup onChange={this.changeMenuType}>
@@ -120,10 +134,25 @@ export default class CustomerModal extends Component {
                         {...formItemLayout}
                         label="地址"
                     >
-                        {getFieldDecorator('style',{
+                        {getFieldDecorator('url',{
                             initialValue: targetPermission.url
                         })(
                             <Input placeholder={'url'}/>
+                        )}
+                    </FormItem> }
+                    {typeName=='menu' && <FormItem
+                        {...formItemLayout}
+                        label="父级"
+                    >
+                        {getFieldDecorator('parentId',{
+                            initialValue: targetPermission.parentId
+                        })(
+                            <TreeSelect
+                                dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                                placeholder="Please select"
+                            >
+                                {treeDom}
+                            </TreeSelect>
                         )}
                     </FormItem> }
                 </Form>

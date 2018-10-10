@@ -76,7 +76,6 @@ export default class appDetail extends Component {
                                 <Menu.Item key={'info'}><Link to={`/apps/${targetApp.appid}/info`}>应用信息</Link></Menu.Item>
                                 <Menu.Item key={'permissions'}><Link to={`/apps/${targetApp.appid}/permissions`}>权限管理</Link></Menu.Item>
                                 <Menu.Item key={'roles'}><Link to={`/apps/${targetApp.appid}/roles`}>角色管理</Link></Menu.Item>
-                                {/* <Menu.Item key={'menus'}><Link to={`/apps/${targetApp.appid}/menus`}>菜单管理</Link></Menu.Item> */}
                             </Menu>
                         </Sider>
                         <Content style={{marginLeft: 20}}>
