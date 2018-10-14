@@ -31,3 +31,7 @@ export function addAppRole(data) {
 export function editAppRole(data) {
     return request(`role`, {method: 'patch', body: JSON.stringify(data)});
 }
+
+export function editAppRolePermission(data) {
+    return request(`role/${data.roleId}/permission`, {method: 'patch', body: JSON.stringify(data)});
+}

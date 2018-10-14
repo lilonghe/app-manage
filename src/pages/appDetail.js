@@ -4,7 +4,7 @@ import { fetchAppAction, chooseAppAction } from '../store/action';
 import LoadingComponent from '../components/help/lodding';
 import pathToRegexp from 'path-to-regexp';
 import styles from './appDetail.styl';
-import { Layout, Menu, Breadcrumb, Icon } from 'antd';
+import { Layout, Menu, Breadcrumb, Icon, Avatar } from 'antd';
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
 import { Link, Route,BrowserRouter as Router, Switch } from 'react-router-dom';
@@ -62,7 +62,7 @@ export default class appDetail extends Component {
                     <Layout style={{backgroundColor: '#FFF'}}>
                         <Sider width={180} style={{ background: '#fff', borderRight: '1px solid #DDD' }}>
                             <div className={styles.appInfo}>
-                                <img src={targetApp.icon} />
+                                <Avatar size={60} shape="square" src={targetApp.icon}/>
                                 <div>
                                     <p className={styles.appName}>{targetApp.name}</p>
                                 </div>

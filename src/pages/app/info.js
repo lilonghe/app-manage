@@ -4,7 +4,7 @@ import { fetchAppAction } from '../../store/action';
 import LoadingComponent from '../../components/help/lodding';
 import pathToRegexp from 'path-to-regexp';
 import styles from './info.styl';
-import { Layout, Menu, Breadcrumb, Icon } from 'antd';
+import { Layout, Menu, Breadcrumb, Icon, Avatar } from 'antd';
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
 import { Link } from 'react-router-dom';
@@ -40,7 +40,7 @@ export default class appDetail extends Component {
         }
         return (
             <div className={styles.appInfo}>
-                <img src={info.icon} />
+                <Avatar size={80} shape="square" src={info.icon}/>
                 <div>
                     <div className={styles.appName}>{info.name}</div>
                     <div className={styles.appid}>@{info.appid}</div>

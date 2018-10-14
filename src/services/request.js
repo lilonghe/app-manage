@@ -3,14 +3,8 @@ import 'whatwg-fetch';
 import { message } from 'antd';
 const host = 'http://localhost:3000/';
 
-const request = async (url, options) => {
-    if (!options) {
-        options = {
-            "query": {},
-            "method": "GET"
-        };
-    }
-
+const request = async (url, options={ query:{}, method:'GET' }) => {
+    options.method = options.method.toUpperCase();
     const q = qs.stringify(options.query);
 
     if (q !== "") {

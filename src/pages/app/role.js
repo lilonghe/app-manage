@@ -1,21 +1,23 @@
 import React, { Component } from 'react';
-import { Select, Form, Icon, Input, Button, Checkbox, Popconfirm, Table, message } from 'antd';
+import { Select, Form, Icon, Input, Button, Checkbox, Popconfirm, Table, message, Drawer, Tooltip } from 'antd';
 import { connect } from 'react-redux';
 const FormItem = Form.Item;
 const  { Column } = Table.Column;
-import { fetchAppRolesAction,addAppRoleAction,editAppRoleAction } from '../../store/action';
-import RoleForm from '../../components/app/role/RoleForm';
+import { fetchAppRolesAction,addAppRoleAction,editAppRoleAction, editAppRolePermissionAction } from '../../store/action';
+import RoleForm from '../../components/app/role/roleForm';
+import RolePermission from '../../components/app/role/rolePermission';
 
 @connect(({ appDetail }) => {
     return { appDetail }
 }, {
-    fetchAppRolesAction, addAppRoleAction,editAppRoleAction
+    fetchAppRolesAction, addAppRoleAction,editAppRoleAction, editAppRolePermissionAction
 })
 export default class role extends Component {
 
     state = {
         targetRole: {},
-        showRoleForm: false
+        showRoleForm: false,
+        showPermissionDrawer: false
     }
 
     componentDidMount() {
@@ -33,7 +35,6 @@ export default class role extends Component {
     }
 
     changeTargetRole = async (val) => {
-        console.log(val);
         if (val) {
             const { appDetail: { roles } } = this.props;
             let role = roles.find(r => r._id == val);
@@ -45,14 +46,17 @@ export default class role extends Component {
                 targetRole: {}
             });
         }
-      
-       this.toggleShowRoleForm();
     }
 
     toggleShowRoleForm = () => {
         this.setState({
             showRoleForm: !this.state.showRoleForm
         })
+    }
+
+    editRoleInfo = async (id) => {
+        await this.changeTargetRole(id);
+        this.toggleShowRoleForm();
     }
 
     saveFormRef = (formRef) => {
@@ -68,12 +72,14 @@ export default class role extends Component {
                     this.props.editAppRoleAction({...values, _id: this.state.targetRole._id, appid}, ({ err }) => {
                         if(!err) {
                             message.success('编辑角色成功');
+                            this.toggleShowRoleForm();
                         }
                     })
                 } else {
                     this.props.addAppRoleAction({...values, appid}, ({ err }) => {
                         if(!err) {
                             message.success('添加角色成功');
+                            this.toggleShowRoleForm();
                         }
                     })
                 }
@@ -82,21 +88,51 @@ export default class role extends Component {
         })
     }
 
+    editRolePermission = async (id) => {
+        await this.changeTargetRole(id);
+        this.setState({
+            showPermissionDrawer: true
+        })
+    }
+
+    changeRolePermissions = (keys) => {
+        const { appDetail: { appid } } = this.props;
+        const { targetRole: { _id } } = this.state;
+
+        this.props.editAppRolePermissionAction({ appId: appid, roleId: _id, permCodes: keys }, ({ err }) => {
+            if (!err) {
+                message.success('已更新');
+            }
+        });
+    }
+
+    toggleShowPermissionDrawer = () =>{
+        this.setState({
+            showPermissionDrawer: !this.state.showPermissionDrawer
+        })
+    }
+
     render() {
         const { appDetail: { roles } } = this.props;
+        const {targetRole} = this.state;
         return (
             <div>
-                <Icon type="file-add" theme="outlined" style={{cursor: 'pointer'}} onClick={this.changeTargetRole}/>
+                <div style={{marginBottom: 10}}>
+                    <Button onClick={this.editRoleInfo}><Icon type="file-add" theme="outlined"/>添加</Button>
+                    <span style={{marginLeft: 10}}>现有共 {roles.length} 项</span>
+                </div>
                 <Table dataSource={roles} pagination={false}>
-                    <Column title="name" dataIndex="name" />
+                    <Column title="名称" dataIndex="name" />
                     <Column title="code" dataIndex="code" />
-                    <Column title="description" dataIndex="description" />
-                    <Column title="user count" dataIndex="count" />
-                    <Column title="action" render={(t, r) => {
+                    <Column title="介绍" dataIndex="description" />
+                    <Column title="关联用户数" dataIndex="count" />
+                    <Column title="操作" render={(t, r) => {
                         return <div>
-                            <Icon type="edit" style={{cursor: 'pointer'}} onClick={() => this.changeTargetRole(r._id)}/>
+                            <Tooltip title="编辑角色基础信息"><Icon type="edit" style={{cursor: 'pointer'}} onClick={() => this.editRoleInfo(r._id)}/></Tooltip>
                             <div style={{width: 20, display:'inline-block'}}></div>
-                            <Icon type="close" />
+                            <Tooltip title="编辑角色权限"><Icon type="project" theme="outlined" style={{cursor: 'pointer'}} onClick={() => this.editRolePermission(r._id)}/></Tooltip>
+                            <div style={{width: 20, display:'inline-block'}}></div>
+                            <Tooltip title="comming soon..."><Icon type="close" /></Tooltip>
                         </div>
                     }} />
                 </Table>
@@ -108,6 +144,16 @@ export default class role extends Component {
                     wrappedComponentRef={this.saveFormRef} 
                     onOk={this.onSubmit} 
                     title={this.state.targetRole ? "编辑角色":"添加角色"} /> }
+
+                <Drawer
+                    title="编辑权限"
+                    placement="right"
+                    width={400}
+                    closable={false}
+                    onClose={this.toggleShowPermissionDrawer}
+                    visible={this.state.showPermissionDrawer}>
+                    <RolePermission key={targetRole._id} checkedKeys={targetRole.permissions} onChange={this.changeRolePermissions} />
+                </Drawer>
             </div>
         );
     }

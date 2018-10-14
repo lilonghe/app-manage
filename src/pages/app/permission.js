@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, Col, Tabs, Switch, Icon, message } from 'antd';
+import { Table, Col, Tabs, Switch, Icon, message, Button } from 'antd';
 const { Column } = Table.Column;
 const TabPane = Tabs.TabPane;
 import PermissionForm from '../../components/app/permission/permissionForm';
@@ -17,7 +17,8 @@ export default class AppPermission extends Component {
     constructor(props){
         super(props);
         this.state = {
-            showPermissionForm: false
+            showPermissionForm: false,
+            expandItems: []
         }
     }
 
@@ -48,6 +49,23 @@ export default class AppPermission extends Component {
         this.formRef = formRef;
     }
 
+    changeExpandItems = (items) => {
+        this.setState({
+            expandItems: items
+        })
+    }
+
+    expandAllItems = () => {
+        const { appDetail: { permissions } } = this.props;
+        let keys = [];
+        permissions.map(k => keys.push(k._id));
+        if(keys.length == this.state.expandItems.length) {
+            this.changeExpandItems([]);            
+        } else {
+            this.changeExpandItems(keys);
+        }
+    }
+
     onSubmit = () => {
         const form = this.formRef.props.form;
         form.validateFields((err, values) => {
@@ -67,7 +85,6 @@ export default class AppPermission extends Component {
     render() {
         const { appDetail: { permissions } } = this.props;
         const menusTree = arrToTree({arr: permissions})
-
         const columns = [
             {dataIndex: 'title', title: '标题'},
             {dataIndex: 'code', title: 'code'},
@@ -77,8 +94,13 @@ export default class AppPermission extends Component {
         ]
         return (
             <div>
-                <Icon type="file-add" theme="outlined" style={{cursor: 'pointer'}} onClick={this.toggleShowPermissionForm}/> <span>共 {permissions.length} 项</span>
-                <Table size="small" bordered={false} rowKey={r => r._id} dataSource={menusTree} pagination={false} columns={columns} />
+                <div style={{marginBottom: 10}}>
+                    <Button onClick={this.toggleShowPermissionForm}><Icon type="file-add" theme="outlined"/>添加</Button>
+                    <Button style={{marginLeft: 10}} onClick={this.expandAllItems}>展开/折叠</Button>
+                    <span style={{marginLeft: 10}}>现有共 {permissions.length} 项</span>
+                </div>
+                
+                <Table size="small" expandedRowKeys={this.state.expandItems} onExpandedRowsChange={this.changeExpandItems} bordered={false} rowKey={r => r._id} dataSource={menusTree} pagination={false} columns={columns} />
 
                 {this.state.showPermissionForm && <PermissionForm visible={this.state.showPermissionForm} 
                     onCancel={this.toggleShowPermissionForm}

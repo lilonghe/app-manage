@@ -16,3 +16,6 @@ ABAC: 基于权限授权
 $ npm run vendor
 $ npm start / npm run build
 ```
+
+------
+2018-10-14 总感觉目前的 Redux 怎么用都不得劲，贼鸡儿烦，准备换成 Mobx 或者使用 Dva.
