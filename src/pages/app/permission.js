@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, Col, Tabs, Switch, Icon, message, Button } from 'antd';
+import { Table, Col, Tabs, Switch, Icon, message, Button, Tooltip } from 'antd';
 const { Column } = Table.Column;
 const TabPane = Tabs.TabPane;
 import PermissionForm from '../../components/app/permission/permissionForm';
@@ -84,13 +84,21 @@ export default class AppPermission extends Component {
 
     render() {
         const { appDetail: { permissions } } = this.props;
-        const menusTree = arrToTree({arr: permissions})
+        const menusTree = arrToTree({arr: permissions.filter(p => p.type == 'menu')})
         const columns = [
             {dataIndex: 'title', title: '标题'},
             {dataIndex: 'code', title: 'code'},
             {dataIndex: 'type', title: '类型'},
             {dataIndex: 'public', title: '公开', render: t => <Switch checked={t} />},
             {dataIndex: 'description', title: '简介'},
+            {dataIndex: 'action', title: '操作', render: (text, record) => {
+                return <div>
+                    <Tooltip title="编辑 comming soon"><Icon type="edit" style={{cursor: 'pointer'}}/></Tooltip>
+                    <div style={{width: 20, display:'inline-block'}}></div>
+                    <Tooltip title="删除"><Icon type="close" style={{cursor: 'pointer'}}/></Tooltip>
+                </div>
+            }},
+
         ]
         return (
             <div>

@@ -3,7 +3,7 @@ import { List, Avatar, Input, Button, message } from 'antd';
 import { connect } from 'react-redux';
 import { fetchAppsAction,addAppAction } from '../store/action';
 import { Link } from 'react-router-dom';
-import styles from './index.styl';
+import styles from './apps.styl';
 import InfoForm from '../components/app/infoForm';
 
 @connect(({ apps }) => {
