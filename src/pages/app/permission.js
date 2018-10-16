@@ -4,13 +4,13 @@ const { Column } = Table.Column;
 const TabPane = Tabs.TabPane;
 import PermissionForm from '../../components/app/permission/permissionForm';
 import { connect } from 'react-redux';
-import { fetchAppPermissionAction, addAppPermissionAction } from '../../store/action';
+import { fetchAppPermissionAction, addAppPermissionAction, editAppPermissionAction } from '../../store/action';
 import { arrToTree } from '../../utils/tools';
 
 @connect(({ appDetail }) => {
     return { appDetail }
 }, {
-    fetchAppPermissionAction, addAppPermissionAction
+    fetchAppPermissionAction, addAppPermissionAction, editAppPermissionAction
 })
 export default class AppPermission extends Component {
 
@@ -18,7 +18,8 @@ export default class AppPermission extends Component {
         super(props);
         this.state = {
             showPermissionForm: false,
-            expandItems: []
+            expandItems: [],
+            targetPermission: {}
         }
     }
 
@@ -70,21 +71,48 @@ export default class AppPermission extends Component {
         const form = this.formRef.props.form;
         form.validateFields((err, values) => {
             if (!err) {
-                this.props.addAppPermissionAction({...values, appid: this.props.appDetail.appid}, ({ err,data }) => {
-                    if(!err) {
-                        this.toggleShowPermissionForm();
-                        message.success('添加成功');
-                        this.loadPermission(this.props.appDetail.appid);
-                    }
-                })
+                if (this.state.targetPermission.code) {
+                    this.props.editAppPermissionAction({...values, _id: this.state.targetPermission._id, appid: this.props.appDetail.appid}, ({ err,data }) => {
+                        if(!err) {
+                            this.toggleShowPermissionForm();
+                            message.success('编辑成功');
+                            this.loadPermission(this.props.appDetail.appid);
+                        }
+                    })
+                } else {
+                    this.props.addAppPermissionAction({...values, appid: this.props.appDetail.appid}, ({ err,data }) => {
+                        if(!err) {
+                            this.toggleShowPermissionForm();
+                            message.success('添加成功');
+                            this.loadPermission(this.props.appDetail.appid);
+                        }
+                    })
+                }
+                
                 return;
             }
         })
     }
 
+    changeTargetPermission = async (target={}) => {
+        await this.setState({
+            targetPermission: target
+        });
+    }
+
+    addPermission = async () => {
+        await this.changeTargetPermission();
+        this.toggleShowPermissionForm();
+    }
+
+    editPermission = async (target) => {
+        await this.changeTargetPermission(target);
+        this.toggleShowPermissionForm();
+    }
+
     render() {
         const { appDetail: { permissions } } = this.props;
-        const menusTree = arrToTree({arr: permissions.filter(p => p.type == 'menu')})
+        const menusTree = arrToTree({arr: permissions})
         const columns = [
             {dataIndex: 'title', title: '标题'},
             {dataIndex: 'code', title: 'code'},
@@ -93,7 +121,7 @@ export default class AppPermission extends Component {
             {dataIndex: 'description', title: '简介'},
             {dataIndex: 'action', title: '操作', render: (text, record) => {
                 return <div>
-                    <Tooltip title="编辑 comming soon"><Icon type="edit" style={{cursor: 'pointer'}}/></Tooltip>
+                    <Tooltip title="编辑"><Icon type="edit" style={{cursor: 'pointer'}} onClick={() => this.editPermission(record)}/></Tooltip>
                     <div style={{width: 20, display:'inline-block'}}></div>
                     <Tooltip title="删除"><Icon type="close" style={{cursor: 'pointer'}}/></Tooltip>
                 </div>
@@ -103,14 +131,14 @@ export default class AppPermission extends Component {
         return (
             <div>
                 <div style={{marginBottom: 10}}>
-                    <Button onClick={this.toggleShowPermissionForm}><Icon type="file-add" theme="outlined"/>添加</Button>
+                    <Button onClick={this.addPermission}><Icon type="file-add" theme="outlined"/>添加</Button>
                     <Button style={{marginLeft: 10}} onClick={this.expandAllItems}>展开/折叠</Button>
                     <span style={{marginLeft: 10}}>现有共 {permissions.length} 项</span>
                 </div>
                 
                 <Table size="small" expandedRowKeys={this.state.expandItems} onExpandedRowsChange={this.changeExpandItems} bordered={false} rowKey={r => r._id} dataSource={menusTree} pagination={false} columns={columns} />
 
-                {this.state.showPermissionForm && <PermissionForm visible={this.state.showPermissionForm} 
+                {this.state.showPermissionForm && <PermissionForm key={this.state.targetPermission.code} targetPermission={this.state.targetPermission} visible={this.state.showPermissionForm} 
                     onCancel={this.toggleShowPermissionForm}
                     wrappedComponentRef={this.saveFormRef} 
                     onOk={this.onSubmit} 

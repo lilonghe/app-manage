@@ -11,32 +11,31 @@ export default class PermissionFormModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            typeSimple: false,
-            typeName: 'menu',
+            typeName: props.targetPermission.type || 'menu',
         }
     }
     
     changeMenuType = (e) => {
         if (e.target.value == "permission") {
             this.setState({
-                typeSimple: true,
                 typeName: e.target.value
             })
         } else {
             this.setState({
-                typeSimple: false,
                 typeName: e.target.value
             })
         }
     }
     
     loopTreeNode = (data) => data.map((item) => {
-        if(item.children) {
+        const { targetPermission: { _id } } = this.props;
+        if(item.type=='permission') return <span></span>;
+        if(item.children && item._id != _id) {
             return <TreeNode value={item._id} title={item.title} key={item._id}>
                 {this.loopTreeNode(item.children)}
             </TreeNode>
         }
-        return <TreeNode value={item._id} title={item.title}  key={item._id}/>
+        return <TreeNode disabled={_id == item._id} value={item._id} title={item.title}  key={item._id}/>
     })
 
     render() {
@@ -55,8 +54,9 @@ export default class PermissionFormModal extends Component {
         };
 
         const { targetPermission = {}, menusTree } = this.props;
-        const { typeSimple, typeName } = this.state;
+        const { typeName } = this.state;
         const treeDom = this.loopTreeNode(menusTree);
+        const typeSimple = typeName == 'permission' ? true : false;
         return (
             <Modal visible={visible} onOk={onOk} onCancel={onCancel} title={title}>
                 <Form>
@@ -81,7 +81,7 @@ export default class PermissionFormModal extends Component {
                             <Input placeholder={'名称'}/>
                         )}
                     </FormItem>
-                    <FormItem
+                    {!targetPermission.code && <FormItem
                         {...formItemLayout}
                         label="Code"
                     >
@@ -95,7 +95,11 @@ export default class PermissionFormModal extends Component {
                         })(
                             <Input placeholder={'唯一代码'}/>
                         )}
-                    </FormItem>
+                    </FormItem> }
+                    {targetPermission.code && <FormItem
+                        {...formItemLayout}
+                        label="Code"
+                    >{targetPermission.code}</FormItem>}
                     <FormItem
                         {...formItemLayout}
                         label="公开"
@@ -103,7 +107,7 @@ export default class PermissionFormModal extends Component {
                         {getFieldDecorator('public', {
                             initialValue: targetPermission.public
                         })(
-                            <Switch />
+                            <Switch defaultChecked={targetPermission.public} />
                         )}
                     </FormItem>
                     <FormItem
@@ -113,7 +117,7 @@ export default class PermissionFormModal extends Component {
                         {getFieldDecorator('type', {
                             initialValue: targetPermission.type || 'menu'
                         })(
-                            <RadioGroup onChange={this.changeMenuType}>
+                            <RadioGroup disabled={targetPermission.type} onChange={this.changeMenuType}>
                                 <RadioButton value="menu">菜单</RadioButton>
                                 <RadioButton value="button">按钮</RadioButton>
                                 <RadioButton value="permission">权限</RadioButton>
