@@ -1,7 +1,7 @@
 import qs from 'qs';
 import 'whatwg-fetch';
 import { message } from 'antd';
-let host = 'http://47.101.42.102:3000/api/';
+let host = 'http://47.101.42.102/api/';
 if (process.env.NODE_ENV=='development') {
     host = 'http://localhost:3000/';
 }
