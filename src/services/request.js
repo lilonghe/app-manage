@@ -1,7 +1,10 @@
 import qs from 'qs';
 import 'whatwg-fetch';
 import { message } from 'antd';
-const host = 'http://localhost:3000/';
+let host = 'http://47.101.42.102:3000/api/';
+if (process.env.NODE_ENV=='development') {
+    host = 'http://localhost:3000/';
+}
 
 const request = async (url, options={ query:{}, method:'GET' }) => {
     options.method = options.method.toUpperCase();

@@ -30,8 +30,8 @@ module.exports = {
         //     context: __dirname,
         //     manifest: require('./manifest.json')
         // }),
-        // new webpack.DefinePlugin({
-        //     'process.env.NODE_ENV': JSON.stringify('development')
-        // })
+        new webpack.DefinePlugin({
+            'process.env.NODE_ENV': 'development'
+        })
     ]
 };
