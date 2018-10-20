@@ -39,7 +39,7 @@ export default class index extends Component {
         const form = this.formRef.props.form;
         form.validateFields((err, values) => {
             if (!err) {
-                this.props.addAppAction({...values}, (err) => {
+                this.props.addAppAction({...values}, ({ err, data }) => {
                     if (!err) {
                         message.success('添加成功');
                         this.props.fetchAppsAction();

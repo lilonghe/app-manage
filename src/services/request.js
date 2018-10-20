@@ -34,6 +34,7 @@ const request = async (url, options={ query:{}, method:'GET' }) => {
             return { data: data.data };
         })).
         catch((err) => {
+            message.error(err.message)
             return { err: err };
         });
 };
