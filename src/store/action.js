@@ -1,4 +1,4 @@
-import { editAppPermission, fetchApps, fetchApp, fetchAppRoles, addApp, getAppPermissions, addAppPermission, addAppRole, editAppRole, editAppRolePermission} from '../services/api';
+import { editAppPermission, fetchApps, fetchApp, fetchAppRoles, addApp,editAppInfo, getAppPermissions, addAppPermission, addAppRole, editAppRole, editAppRolePermission} from '../services/api';
 import actionTypes from './actionTypes';
 
 export const fetchAppsAction = () => {
@@ -17,7 +17,16 @@ export const addAppAction = (params, cb) => {
     return async dispatch => {
         let { err, data } = await addApp(params);
         if (!err) {
-            cb && cb(data);
+            cb && cb({ err, data });
+        }
+    };
+};
+
+export const editAppAction = (params, cb) => {
+    return async dispatch => {
+        let { err, data } = await editAppInfo(params);
+        if (!err) {
+            cb && cb({ err, data });
         }
     };
 };

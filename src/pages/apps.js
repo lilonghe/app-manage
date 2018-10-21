@@ -1,21 +1,22 @@
 import React,{ Component } from 'react';
-import { List, Avatar, Input, Button, message } from 'antd';
+import { List, Avatar, Input, Button, message, Icon } from 'antd';
 import { connect } from 'react-redux';
-import { fetchAppsAction,addAppAction } from '../store/action';
+import { fetchAppsAction,addAppAction,editAppAction } from '../store/action';
 import { Link } from 'react-router-dom';
 import styles from './apps.styl';
 import InfoForm from '../components/app/infoForm';
 
 @connect(({ apps }) => {
     return { apps }
-}, { fetchAppsAction,addAppAction })
+}, { fetchAppsAction,addAppAction,editAppAction })
 export default class index extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
             keyword: '',
-            showInfoForm: false
+            showInfoForm: false,
+            targetApp: {}
         }
     }
 
@@ -39,13 +40,23 @@ export default class index extends Component {
         const form = this.formRef.props.form;
         form.validateFields((err, values) => {
             if (!err) {
-                this.props.addAppAction({...values}, ({ err, data }) => {
-                    if (!err) {
-                        message.success('添加成功');
-                        this.props.fetchAppsAction();
-                        this.toggleShowInfoForm();
-                    }
-                })
+                if (this.state.targetApp._id) {
+                    this.props.editAppAction({...values, appid: this.state.targetApp.appid}, ({ err, data }) => {
+                        if (!err) {
+                            message.success('编辑成功');
+                            this.props.fetchAppsAction();
+                            this.toggleShowInfoForm();
+                        }
+                    })
+                } else {
+                    this.props.addAppAction({...values}, ({ err, data }) => {
+                        if (!err) {
+                            message.success('添加成功');
+                            this.props.fetchAppsAction();
+                            this.toggleShowInfoForm();
+                        }
+                    })
+                }
             }
         })
     }
@@ -60,12 +71,28 @@ export default class index extends Component {
         })
     }
 
+    editApp = (id) => {
+        const { apps: { list } } = this.props;
+        const app = list.find(item => item._id == id);
+        if (app) {
+            this.setState({
+                targetApp: app
+            }, this.toggleShowInfoForm());
+        }
+    }
+
+    createApp = () => {
+        this.setState({
+            targetApp: {}
+        }, this.toggleShowInfoForm());
+    }
+
     render() {
         const { apps: { list } } = this.props;
         const appsView = this.filterApps(this.state.keyword, list)
         return (
             <div className={styles.appListWrapper}>
-                <Button onClick={this.toggleShowInfoForm}>添加应用</Button>
+                <Button onClick={this.createApp}>添加应用</Button>
                 <Input onChange={this.changeKeyword} placeholder={"输入关键词查询"} />
                 <List
                     dataSource={appsView}
@@ -76,16 +103,21 @@ export default class index extends Component {
                                 title={<Link to={`/apps/${item.appid}/info`}>{item.name}</Link>}
                                 description={item.description}
                             />
+                           <Icon 
+                            onClick={() => this.editApp(item._id)}
+                            type="edit" theme="outlined" style={{cursor: 'pointer', marginRight: 10}}/>
                         </List.Item>
                     )}/>
 
 
                 <InfoForm 
+                    key={this.state.targetApp._id}
+                    targetApp={this.state.targetApp}
                     visible={this.state.showInfoForm} 
                     onCancel={this.toggleShowInfoForm}
                     wrappedComponentRef={this.saveFormRef} 
                     onOk={this.handleSubmit} 
-                    title="添加应用" />
+                    title={this.state.targetApp._id ? "编辑应用":"添加应用"} />
             </div>
         )
     }

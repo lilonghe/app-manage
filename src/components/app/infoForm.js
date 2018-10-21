@@ -19,16 +19,10 @@ export default class InfoFormModal extends Component {
             },
         };
 
-        const { targetRole = {} } = this.props;
+        const { targetApp = {} } = this.props;
         return (
             <Modal visible={visible} onOk={onOk} onCancel={onCancel} title={title}>
                 <Form>
-                { targetRole.id && <FormItem
-                        {...formItemLayout}
-                        label="Id"
-                    >
-                        <span>{targetRole.id}</span>
-                    </FormItem> }
                     <FormItem
                         {...formItemLayout}
                         label="名称"
@@ -39,26 +33,30 @@ export default class InfoFormModal extends Component {
                             },{
                                 required: true, message: '未输入名称',
                             }],
-                            initialValue: targetRole.name
+                            initialValue: targetApp.name
                         })(
                             <Input placeholder={'名称'}/>
                         )}
                     </FormItem>
-                    <FormItem
-                        {...formItemLayout}
-                        label="AppId"
-                    >
+                    {targetApp._id ? 
+                        <FormItem
+                            {...formItemLayout}
+                            label="AppId" >
+                            <span>{targetApp.appid}</span>
+                        </FormItem> :<FormItem
+                            {...formItemLayout}
+                            label="AppId" >
                         {getFieldDecorator('appid', {
                             rules: [{
                                 pattern: /^[A-Za-z_]{1,20}$/, message: '字母或下换线, 最多20个字符'
                             }, {
-                                required: true, message: '未输入 code',
+                                required: true, message: '未输入 AppId',
                             }],
-                            initialValue: targetRole.code
+                            initialValue: ''
                         })(
-                            <Input placeholder={'唯一代码'}/>
+                            <Input placeholder={'AppId'}/>
                         )}
-                    </FormItem>
+                    </FormItem>}
                     <FormItem
                         {...formItemLayout}
                         label="简介"
@@ -69,7 +67,7 @@ export default class InfoFormModal extends Component {
                             },{
                                 required: true, message: '未输入介绍',
                             }],
-                            initialValue: targetRole.description
+                            initialValue: targetApp.description
                         })(
                             <Input.TextArea  placeholder={'简要介绍'}/>
                         )}
