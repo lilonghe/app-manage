@@ -71,7 +71,8 @@ export default class index extends Component {
         })
     }
 
-    editApp = (id) => {
+    editApp = (id, e) => {
+        e.preventDefault();
         const { apps: { list } } = this.props;
         const app = list.find(item => item._id == id);
         if (app) {
@@ -97,16 +98,18 @@ export default class index extends Component {
                 <List
                     dataSource={appsView}
                     renderItem={item => (
-                        <List.Item>
-                            <List.Item.Meta
-                                avatar={<Avatar shape="square" src={item.icon} />}
-                                title={<Link to={`/apps/${item.appid}/info`}>{item.name}</Link>}
-                                description={item.description}
-                            />
-                           <Icon 
-                            onClick={() => this.editApp(item._id)}
-                            type="edit" theme="outlined" style={{cursor: 'pointer', marginRight: 10}}/>
-                        </List.Item>
+                        <Link to={`/apps/${item.appid}/info`}>
+                            <List.Item className={styles.appItem} actions={[<Icon 
+                                    onClick={(e) => this.editApp(item._id, e)}
+                                    type="edit" theme="outlined" style={{cursor: 'pointer', marginRight: 10}}/>]}>
+                                <List.Item.Meta
+                                    avatar={<Avatar shape="square" src={item.icon} />}
+                                    title={<Link to={`/apps/${item.appid}/info`}>{item.name}</Link>}
+                                    description={item.description}
+                                />
+                            
+                            </List.Item>
+                        </Link>
                     )}/>
 
 
