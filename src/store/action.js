@@ -1,4 +1,4 @@
-import { editAppPermission, fetchApps, fetchApp, fetchAppRoles, addApp,editAppInfo, getAppPermissions, addAppPermission, addAppRole, editAppRole, editAppRolePermission} from '../services/api';
+import { editAppPermission, fetchApps, fetchApp, fetchAppRoles, addApp,editAppInfo, getAppPermissions, addAppPermission, addAppRole, editAppRole, editAppRolePermission, searchUser, addUser} from '../services/api';
 import actionTypes from './actionTypes';
 
 export const fetchAppsAction = () => {
@@ -119,4 +119,25 @@ export const chooseAppAction = (appid) => {
             value: appid
         });
     }
+}
+
+export const searchUserAction = (params) => {
+    return async dispatch => {
+        let { err, data } = await searchUser(params);
+        if (!err) {
+            dispatch({
+                type: actionTypes.onSearchUser,
+                value: data
+            });
+        }
+    };
+}
+
+export const addUserAction = (params, cb) => {
+    return async dispatch => {
+        let { err, data } = await addUser(params);
+        if (!err) {
+            cb && cb({ err, data });
+        }
+    };
 }

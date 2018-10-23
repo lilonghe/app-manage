@@ -4,5 +4,7 @@ export default {
     onFetchAppRoles: 'onFetchAppRoles',
     onAddApp: 'onAddApp',
     onFetchAppPermission: 'onFetchAppPermission',
-    onChooseApp: 'onChooseApp'
+    onChooseApp: 'onChooseApp',
+    onSearchUser: 'onSearchUser',
+    onAddUser: 'onAddUser'
 };

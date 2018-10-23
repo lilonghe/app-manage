@@ -43,3 +43,11 @@ export function editAppRolePermission(data) {
 export function editAppInfo(data) {
     return request(`app`, {method: 'patch', body: JSON.stringify(data)});
 }
+
+export function searchUser(data) {
+    return request(`users`,{ method: 'get', query: data });
+}
+
+export function addUser(data) {
+    return request(`users`, {method: 'post', body: JSON.stringify(data)});
+}
