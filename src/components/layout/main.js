@@ -16,7 +16,7 @@ export default class main extends Component {
                     <Menu
                         theme="dark"
                         mode="horizontal"
-                        defaultSelectedKeys={[key]}
+                        selectedKeys={[key]}
                         style={{ lineHeight: '64px', display: 'inline-block' }}
                     >
                         <Menu.Item key="users"><Link to={'/users'}>用户管理</Link></Menu.Item>
