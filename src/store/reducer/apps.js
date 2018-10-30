@@ -1,7 +1,9 @@
 import actionTypes from '../actionTypes';
 let defaultState = {
     list: [],
-    targetApp: {}
+    targetApp: {},
+    
+    showChooseTargetApp: false
 };
 
 export const apps = (state=defaultState, action={}) => {
@@ -10,6 +12,8 @@ export const apps = (state=defaultState, action={}) => {
         return {...state, list: action.value};
     case actionTypes.onFetchApp:
         return {...state, targetApp: action.value};
+    case actionTypes.onChangeShowChooseTargetApp:
+        return {...state, showChooseTargetApp: action.value}
     default:
         return state;
     }

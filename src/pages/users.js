@@ -1,13 +1,14 @@
 import React, {Component} from 'react';
 import { Input, Table, Button, message } from 'antd';
-import { searchUserAction, addUserAction } from '../store/action';
+import { searchUserAction, addUserAction, changeShowChooseTargetApp } from '../store/action';
 import { connect } from 'react-redux';
 import InfoForm from '../components/user/infoForm';
+import ChooseTargetApp from '../components/app/chooseTargetApp';
 
 
 @connect(({ users }) => {
     return { users };
-}, { searchUserAction,addUserAction })
+}, { searchUserAction,addUserAction, changeShowChooseTargetApp })
 export default class User extends Component {
     constructor(props) {
         super(props);
@@ -72,6 +73,10 @@ export default class User extends Component {
         })
     }
 
+    editUserPerms = () => {
+        this.props.changeShowChooseTargetApp(true)
+    }
+
     render() {
         const usersColumns = [
             {title:"唯一标识", dataIndex: 'userId' },
@@ -80,8 +85,8 @@ export default class User extends Component {
             {title:'创建时间', dataIndex:'createdAt'},
             {title:'更新时间', dataIndex:'updatedAt'},
             {title:'操作', dataIndex:'action', render: (text, record) =>{
-                <div>
-                    <Button>编辑权限</Button>
+                return <div>
+                    <Button onClick={() => this.editUserPerms(record._id)}>编辑权限</Button>
                     <Button>删除</Button>
                 </div>
             }},
@@ -106,6 +111,8 @@ export default class User extends Component {
                     wrappedComponentRef={this.saveFormRef} 
                     onOk={this.handleSubmit} 
                     title={targetUser._id ? "编辑用户":"添加用户"} />
+
+                <ChooseTargetApp />
             </div>
         )
     }

@@ -141,3 +141,12 @@ export const addUserAction = (params, cb) => {
         }
     };
 }
+
+export const changeShowChooseTargetApp = (show) => {
+    return async dispatch => {
+        dispatch({
+            type: actionTypes.onChangeShowChooseTargetApp,
+            value: show
+        });
+    };
+};

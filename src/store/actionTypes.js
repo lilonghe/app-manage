@@ -6,5 +6,6 @@ export default {
     onFetchAppPermission: 'onFetchAppPermission',
     onChooseApp: 'onChooseApp',
     onSearchUser: 'onSearchUser',
-    onAddUser: 'onAddUser'
+    onAddUser: 'onAddUser',
+    onChangeShowChooseTargetApp: 'onChangeShowChooseTargetApp'
 };
