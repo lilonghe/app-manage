@@ -1,24 +1,41 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import { Drawer } from 'antd';
-import { changeShowChooseTargetApp } from '../../store/action';
+import { changeShowChooseTargetApp, fetchAppsAction, chooseAppAction } from '../../store/action';
+import styles from './chooseTargetApp.styl';
 
 @connect(({ apps }) => {
     return { apps }
-}, { changeShowChooseTargetApp })
+}, { changeShowChooseTargetApp, fetchAppsAction,chooseAppAction })
 export default class ChooseTargetApp extends Component {
 
     closeDrawer = () => {
         this.props.changeShowChooseTargetApp(false)
     }
 
+    componentDidMount() {
+        if (this.props.apps.list.length < 1){
+            this.props.fetchAppsAction();
+        }
+    }
+
+    chooseApp = async (appid) => {
+        await this.props.chooseAppAction(appid);
+        if (this.props.onChange) {
+            this.props.onChange();
+        }
+        this.props.changeShowChooseTargetApp(false);
+    }
+
     render() {
-        const { apps: { showChooseTargetApp } } = this.props;
+        const { apps: { showChooseTargetApp, list } } = this.props;
         return (
             <Drawer
                 visible={showChooseTargetApp}
                 onClose={this.closeDrawer}>
-                This is content.
+                {list.map(app => <div onClick={() => this.chooseApp(app.appid)} className={styles.appItem}>
+                    <img src={app.icon} /> {app.name}
+                </div>)}
             </Drawer>
         )
     }

@@ -1,14 +1,15 @@
 import React, {Component} from 'react';
 import { Input, Table, Button, message } from 'antd';
-import { searchUserAction, addUserAction, changeShowChooseTargetApp } from '../store/action';
+import { searchUserAction, addUserAction, changeShowChooseTargetApp, changeShowEditUserPermission } from '../store/action';
 import { connect } from 'react-redux';
 import InfoForm from '../components/user/infoForm';
 import ChooseTargetApp from '../components/app/chooseTargetApp';
+import EditUserPermission from '../components/user/userPermission';
 
 
-@connect(({ users }) => {
-    return { users };
-}, { searchUserAction,addUserAction, changeShowChooseTargetApp })
+@connect(({ users, apps }) => {
+    return { users, apps };
+}, { searchUserAction,addUserAction, changeShowChooseTargetApp, changeShowEditUserPermission })
 export default class User extends Component {
     constructor(props) {
         super(props);
@@ -73,8 +74,15 @@ export default class User extends Component {
         })
     }
 
-    editUserPerms = () => {
-        this.props.changeShowChooseTargetApp(true)
+    editUserPerms = async () => {
+        if (!this.props.apps.targetApp.appid) {
+            return this.props.changeShowChooseTargetApp(true)
+        } 
+        this.props.changeShowEditUserPermission(true);
+    }
+
+    changeTargetApp = () => {
+        this.props.changeShowEditUserPermission(true);
     }
 
     render() {
@@ -95,7 +103,7 @@ export default class User extends Component {
 
         return (
             <div style={{width: 1200, margin: 'auto'}}>
-                <Button onClick={this.addUser}>添加用户</Button>
+                <Button onClick={this.addUser}>添加用户</Button> 共{totalUser}个用户
                 <Input onChange={this.changeKeyword}/>
                 <Table dataSource={userList} columns={usersColumns} pagination={{
                     total: totalUser,
@@ -112,7 +120,8 @@ export default class User extends Component {
                     onOk={this.handleSubmit} 
                     title={targetUser._id ? "编辑用户":"添加用户"} />
 
-                <ChooseTargetApp />
+                <ChooseTargetApp onChange={this.changeTargetApp} />
+                <EditUserPermission />
             </div>
         )
     }

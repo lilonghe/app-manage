@@ -150,3 +150,24 @@ export const changeShowChooseTargetApp = (show) => {
         });
     };
 };
+
+export const fetchUserAppSchema = (appid) => {
+    return async dispatch => {
+        let { err, data } = await fetchAppRoles(appid);
+        if (!err) {
+            dispatch({
+                type: actionTypes.onFetchUserAppSchema,
+                value: { roles: data }
+            });
+        }
+    };
+};
+
+export const changeShowEditUserPermission = (show) => {
+    return async dispatch => {
+        dispatch({
+            type: actionTypes.toggleShowEditUserPermission,
+            value: show
+        });
+    };
+};

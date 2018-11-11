@@ -14,6 +14,8 @@ export const apps = (state=defaultState, action={}) => {
         return {...state, targetApp: action.value};
     case actionTypes.onChangeShowChooseTargetApp:
         return {...state, showChooseTargetApp: action.value}
+    case actionTypes.onChooseApp:
+        return {...state, targetApp: state.list.find(item => item.appid==action.value) || {}};
     default:
         return state;
     }

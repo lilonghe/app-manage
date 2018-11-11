@@ -63,6 +63,11 @@ export default class role extends Component {
         this.formRef = formRef;
     }
 
+    loadRoles = () => {
+        const { appDetail: { info } } = this.props;
+        this.props.fetchAppRolesAction(info.appid);
+    }
+
     onSubmit = () => {
         const form = this.formRef.props.form;
         form.validateFields((err, values) => {
@@ -73,6 +78,7 @@ export default class role extends Component {
                         if(!err) {
                             message.success('编辑角色成功');
                             this.toggleShowRoleForm();
+                            this.loadRoles();
                         }
                     })
                 } else {
@@ -80,6 +86,7 @@ export default class role extends Component {
                         if(!err) {
                             message.success('添加角色成功');
                             this.toggleShowRoleForm();
+                            this.loadRoles();
                         }
                     })
                 }

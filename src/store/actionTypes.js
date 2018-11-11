@@ -7,5 +7,8 @@ export default {
     onChooseApp: 'onChooseApp',
     onSearchUser: 'onSearchUser',
     onAddUser: 'onAddUser',
-    onChangeShowChooseTargetApp: 'onChangeShowChooseTargetApp'
+    onChangeShowChooseTargetApp: 'onChangeShowChooseTargetApp',
+    onFetchUserAppRoles: 'onFetchUserAppRoles',
+    onFetchUserAppSchema: 'onFetchUserAppSchema',
+    toggleShowEditUserPermission: 'toggleShowEditUserPermission'
 };
