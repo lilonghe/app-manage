@@ -1,4 +1,4 @@
-import { editAppPermission, fetchApps, fetchApp, fetchAppRoles, addApp,editAppInfo, getAppPermissions, addAppPermission, addAppRole, editAppRole, editAppRolePermission, searchUser, addUser} from '../services/api';
+import { getUserAppRoleIds, editAppPermission, fetchApps, fetchApp, fetchAppRoles, addApp,editAppInfo, getAppPermissions, addAppPermission, addAppRole, editAppRole, editAppRolePermission, searchUser, addUser, userAddRole, userRemoveRole} from '../services/api';
 import actionTypes from './actionTypes';
 
 export const fetchAppsAction = () => {
@@ -171,3 +171,52 @@ export const changeShowEditUserPermission = (show) => {
         });
     };
 };
+
+export const userAddRoleAction = (params, cb) => {
+    return async dispatch => {
+        let { err, data } = await userAddRole(params);
+        if (!err) {
+            dispatch({
+                type: actionTypes.onAddUserRole,
+                value: params.roleid
+            });
+            cb && cb({ err, data });
+        }
+    };
+}
+
+
+export const getUserAppRoleIdsAction = (params) => {
+    return async dispatch => {
+        let { err, data } = await getUserAppRoleIds(params);
+        if (!err) {
+            dispatch({
+                type: actionTypes.onFetchUserAppRoles,
+                value: { userAppRoles: data }
+            });
+        }
+    };
+}
+
+
+export const userRemoveRoleAction = (params, cb) => {
+    return async dispatch => {
+        let { err, data } = await userRemoveRole(params);
+        if (!err) {
+            dispatch({
+                type: actionTypes.onRemoveUserRole,
+                value: params.roleid
+            });
+            cb && cb({ err, data });
+        }
+    };
+}
+
+export const  changeTargetUser = (userinfo) => {
+    return async dispatch => {
+        dispatch({
+            type: actionTypes.onChangeTargetUser,
+            value: userinfo
+        });
+    };
+}

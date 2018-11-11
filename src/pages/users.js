@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { Input, Table, Button, message } from 'antd';
-import { searchUserAction, addUserAction, changeShowChooseTargetApp, changeShowEditUserPermission } from '../store/action';
+import { searchUserAction, addUserAction, changeShowChooseTargetApp, changeShowEditUserPermission, changeTargetUser } from '../store/action';
 import { connect } from 'react-redux';
 import InfoForm from '../components/user/infoForm';
 import ChooseTargetApp from '../components/app/chooseTargetApp';
@@ -9,7 +9,7 @@ import EditUserPermission from '../components/user/userPermission';
 
 @connect(({ users, apps }) => {
     return { users, apps };
-}, { searchUserAction,addUserAction, changeShowChooseTargetApp, changeShowEditUserPermission })
+}, { searchUserAction,addUserAction, changeShowChooseTargetApp, changeShowEditUserPermission, changeTargetUser })
 export default class User extends Component {
     constructor(props) {
         super(props);
@@ -74,11 +74,16 @@ export default class User extends Component {
         })
     }
 
-    editUserPerms = async () => {
-        if (!this.props.apps.targetApp.appid) {
-            return this.props.changeShowChooseTargetApp(true)
-        } 
-        this.props.changeShowEditUserPermission(true);
+    editUserPerms = async (id) => {
+        let user = this.props.users.userList.find(user => user._id == id);
+
+        if (user) {
+            this.props.changeTargetUser(user);
+            if (!this.props.apps.targetApp.appid) {
+                return this.props.changeShowChooseTargetApp(true)
+            } 
+            this.props.changeShowEditUserPermission(true);
+        }
     }
 
     changeTargetApp = () => {

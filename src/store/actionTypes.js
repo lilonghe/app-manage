@@ -10,5 +10,8 @@ export default {
     onChangeShowChooseTargetApp: 'onChangeShowChooseTargetApp',
     onFetchUserAppRoles: 'onFetchUserAppRoles',
     onFetchUserAppSchema: 'onFetchUserAppSchema',
-    toggleShowEditUserPermission: 'toggleShowEditUserPermission'
+    toggleShowEditUserPermission: 'toggleShowEditUserPermission',
+    onChangeTargetUser: 'onChangeTargetUser',
+    onAddUserRole:'onAddUserRole',
+    onRemoveUserRole: 'onRemoveUserRole'
 };

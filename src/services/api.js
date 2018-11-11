@@ -51,3 +51,15 @@ export function searchUser(data) {
 export function addUser(data) {
     return request(`users`, {method: 'post', body: JSON.stringify(data)});
 }
+
+export function userAddRole(data) {
+    return request(`users/${data.userid}/apps/${data.appid}/roles/${data.rolecode}`, {method: 'post'});
+}
+
+export function userRemoveRole(data) {
+    return request(`users/${data.userid}/apps/${data.appid}/roles/${data.rolecode}`, {method: 'delete'});
+}
+
+export function getUserAppRoleIds(data) {
+    return request(`users/${data.userid}/apps/${data.appid}/roles`, {method: 'get'});
+}
