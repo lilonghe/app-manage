@@ -4,6 +4,26 @@ import AppsPage from './pages/apps';
 import AppDetailPage from './pages/appDetail';
 import MainLayout from './components/layout/main';
 import UsersPage from './pages/users';
+import { notification  } from 'antd';
+
+global.actionTip = {
+    success: (msg) => {
+        notification.success({
+            message: '操作成功',
+            description: msg,
+            placement: 'bottomRight',
+            duration: 1.5
+        });
+    },
+    fail: (msg) => {
+        notification.error({
+            message: '操作失败',
+            description: msg,
+            placement: 'bottomRight',
+            duration: 10
+        });
+    }
+}
 
 
 export default class App extends Component {

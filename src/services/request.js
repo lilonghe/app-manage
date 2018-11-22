@@ -28,13 +28,13 @@ const request = async (url, options={ query:{}, method:'GET' }) => {
     }).
         then((response) => response.json().then((data) => {
             if (data.errcode != 0) {
-                message.error(`[${data.errcode}] ${data.errmsg}`)
+                global.actionTip.fail(`[${data.errcode}] ${data.errmsg}`)
                 return { err: data.errmsg, data };
             }
             return { data: data.data };
         })).
         catch((err) => {
-            message.error(err.message)
+            global.actionTip.fail(err.message)
             return { err: err };
         });
 };
