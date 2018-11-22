@@ -13,12 +13,15 @@ export const userPermission = (state=defaultState, action={}) => {
     case actionTypes.toggleShowEditUserPermission:
         return {...state, showEditUserPermission: action.value};
     case actionTypes.onFetchUserAppSchema:
-        return {...state, appSchema: {...state.appSchema, roles: action.value.roles}};
+        return {...state, appSchema: {...state.appSchema, roles: action.value.roles, permissions: action.value.permissions}};
     case actionTypes.onFetchUserAppRoles:
         return {...state, userAppRoles: action.value.userAppRoles }
+    case actionTypes.onAddUserRole: 
+        state.userAppRoles.push(action.value);
+        return {...state};
     case actionTypes.onRemoveUserRole: 
         let roleId = action.value;
-        let i = state.appSchema.roles.findIndex(r => r._id == roleId);
+        let i = state.userAppRoles.findIndex(r => r == roleId);
         if (i!=-1) {
             return {...state, userAppRoles: [...state.userAppRoles.slice(0, i), ...state.userAppRoles.slice(i+1, state.userAppRoles.length)]}
         }

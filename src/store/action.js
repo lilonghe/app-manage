@@ -153,11 +153,12 @@ export const changeShowChooseTargetApp = (show) => {
 
 export const fetchUserAppSchema = (appid) => {
     return async dispatch => {
-        let { err, data } = await fetchAppRoles(appid);
-        if (!err) {
+        let roleResp = await fetchAppRoles(appid);
+        let permResp = await getAppPermissions(appid);
+        if (!roleResp.err && !permResp.err) {
             dispatch({
                 type: actionTypes.onFetchUserAppSchema,
-                value: { roles: data }
+                value: { roles: roleResp.data, permissions: permResp.data }
             });
         }
     };
@@ -180,6 +181,7 @@ export const userAddRoleAction = (params, cb) => {
                 type: actionTypes.onAddUserRole,
                 value: params.roleid
             });
+            global.actionTip.success(`添加角色`);
             cb && cb({ err, data });
         }
     };
@@ -207,6 +209,7 @@ export const userRemoveRoleAction = (params, cb) => {
                 type: actionTypes.onRemoveUserRole,
                 value: params.roleid
             });
+            global.actionTip.success(`移除角色`);
             cb && cb({ err, data });
         }
     };
