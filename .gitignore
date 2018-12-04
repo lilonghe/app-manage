@@ -8,3 +8,6 @@ dist
 build/manifest.json
 
 package-lock.json
+
+api/run
+api/logs
