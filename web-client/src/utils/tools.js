@@ -1,4 +1,4 @@
-export function arrToTree({arr,key="_id",parentKey="parentId"}){
+export function arrToTree({arr,key="id",parentKey="parentId"}){
     let mapArr = {}, finalArr = [], newArr = JSON.parse(JSON.stringify(arr));
     newArr.map(item=> mapArr[item[key]] = item);
 

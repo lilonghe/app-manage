@@ -18,12 +18,12 @@ export default class UserPermission extends Component {
     }
 
     loadData = (appid) => {
-        const { apps: { targetApp }, users: { targetUser: { _id } }  } = this.props;
+        const { apps: { targetApp }, users: { targetUser: { id } }  } = this.props;
         if(!appid) {
             appid = targetApp.appid;
         }
         this.props.fetchUserAppSchema(appid);
-        this.props.getUserAppRoleIdsAction({ appid, userid: _id })
+        this.props.getUserAppRoleIdsAction({ appid, userid: id })
     }
 
     componentWillReceiveProps(nextProps) {
@@ -42,11 +42,11 @@ export default class UserPermission extends Component {
     }
 
     changeRole = (roleid, rolecode, val) => {
-        const { apps: { targetApp: { appid }}, users: { targetUser: { _id } }  } = this.props;
+        const { apps: { targetApp: { appid }}, users: { targetUser: { id } }  } = this.props;
         if (val) {
-            this.props.userAddRoleAction({ appid, roleid, rolecode, userid: _id })
+            this.props.userAddRoleAction({ appid, roleid, rolecode, userid: id })
         } else {
-            this.props.userRemoveRoleAction({ appid, roleid, rolecode, userid: _id })
+            this.props.userRemoveRoleAction({ appid, roleid, rolecode, userid: id })
         }
     }
 
@@ -67,7 +67,7 @@ export default class UserPermission extends Component {
         let checkedKeysMap = {}, checkedKeys = [];
         userAppRoles.map(rKey => {
             roles.map(r => {
-                if (r._id == rKey) {
+                if (r.id == rKey) {
                     r.permissions.map(p => checkedKeysMap[p] = 1);
                 }
             })
@@ -86,7 +86,7 @@ export default class UserPermission extends Component {
                     <div style={{borderRight: '1px solid #CCC', flex: 1}}>
                         <p style={{color: '#999'}}>操作角色</p>
                         {roles.map(role => {
-                            return <div style={{marginBottom: 6}}><Checkbox checked={userAppRoles.find(item => item==role._id)} onChange={(e) => this.changeRole(role._id, role.code, e.target.checked)}>{role.name}</Checkbox></div>
+                            return <div style={{marginBottom: 6}}><Checkbox checked={userAppRoles.find(item => item==role.id)} onChange={(e) => this.changeRole(role.id, role.code, e.target.checked)}>{role.name}</Checkbox></div>
                         })}
                     </div>
 

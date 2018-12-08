@@ -8,6 +8,14 @@ class AppController extends Controller {
   async index() {
     return await this.ctx.service.app.findAll();
   }
+
+  async getOne() {
+    const appid = this.ctx.params.appid;
+    if (!appid) {
+      return errors.ErrMissParam;
+    }
+    return await this.ctx.service.app.findOne(appid);
+  }
   
   async create() {
     const { ctx, service } = this;

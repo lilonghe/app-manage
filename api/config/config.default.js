@@ -24,12 +24,18 @@ module.exports = appInfo => {
     csrf: {
       enable: false,
     },
+    domainWhiteList: ['http://localhost:4000']
+  }
+
+  config.cors = {
+    origin: 'http://localhost:4000',
+    credentials: true
   }
 
   config.onerror = {
     all(err, ctx) {
       console.log(err);
-      ctx.body = { error_message: err.message, error_code: 'unknown_error' };
+      ctx.body = JSON.stringify({ error_message: err.message, error_code: 'unknown_error', stack: err });
       ctx.status = 200;
     }
   }

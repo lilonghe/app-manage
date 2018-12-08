@@ -44,7 +44,13 @@ export default class RoleFormModal extends Component {
                             <Input placeholder={'名称'}/>
                         )}
                     </FormItem>
-                    <FormItem
+                    { targetRole.code && <FormItem
+                        {...formItemLayout}
+                        label="Code"
+                    >
+                        <span>{targetRole.code}</span>
+                    </FormItem> }
+                    { !targetRole.code && <FormItem
                         {...formItemLayout}
                         label="Code"
                     >
@@ -58,7 +64,7 @@ export default class RoleFormModal extends Component {
                         })(
                             <Input placeholder={'唯一代码'}/>
                         )}
-                    </FormItem>
+                    </FormItem> }
                     <FormItem
                         {...formItemLayout}
                         label="简介"

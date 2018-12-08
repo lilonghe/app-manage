@@ -38,7 +38,7 @@ export default class InfoFormModal extends Component {
                             <Input placeholder={'名称'}/>
                         )}
                     </FormItem>
-                    {targetApp._id ? 
+                    {targetApp.id ? 
                         <FormItem
                             {...formItemLayout}
                             label="AppId" >

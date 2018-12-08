@@ -37,7 +37,7 @@ export default class role extends Component {
     changeTargetRole = async (val) => {
         if (val) {
             const { appDetail: { roles } } = this.props;
-            let role = roles.find(r => r._id == val);
+            let role = roles.find(r => r.id == val);
             await this.setState({
                 targetRole: role || {}
             });
@@ -73,8 +73,9 @@ export default class role extends Component {
         form.validateFields((err, values) => {
             if (!err) {
                 const { appDetail: { appid } } = this.props;
-                if(this.state.targetRole._id) {
-                    this.props.editAppRoleAction({...values, _id: this.state.targetRole._id, appid}, ({ err }) => {
+                if(this.state.targetRole.id) {
+                    const { code, id } = this.state.targetRole;
+                    this.props.editAppRoleAction({...values,code, id, appid}, ({ err }) => {
                         if(!err) {
                             message.success('编辑角色成功');
                             this.toggleShowRoleForm();
@@ -104,9 +105,9 @@ export default class role extends Component {
 
     changeRolePermissions = (keys) => {
         const { appDetail: { appid } } = this.props;
-        const { targetRole: { _id } } = this.state;
+        const { targetRole: { id, code } } = this.state;
 
-        this.props.editAppRolePermissionAction({ appId: appid, roleId: _id, permCodes: keys }, ({ err }) => {
+        this.props.editAppRolePermissionAction({ appid: appid, role_code: code, permission_codes: keys }, ({ err }) => {
             if (!err) {
                 message.success('已更新');
             }
@@ -135,9 +136,9 @@ export default class role extends Component {
                     <Column title="关联用户数" dataIndex="count" />
                     <Column title="操作" render={(t, r) => {
                         return <div>
-                            <Tooltip title="编辑角色基础信息"><Icon type="edit" style={{cursor: 'pointer'}} onClick={() => this.editRoleInfo(r._id)}/></Tooltip>
+                            <Tooltip title="编辑角色基础信息"><Icon type="edit" style={{cursor: 'pointer'}} onClick={() => this.editRoleInfo(r.id)}/></Tooltip>
                             <div style={{width: 20, display:'inline-block'}}></div>
-                            <Tooltip title="编辑角色权限"><Icon type="project" theme="outlined" style={{cursor: 'pointer'}} onClick={() => this.editRolePermission(r._id)}/></Tooltip>
+                            <Tooltip title="编辑角色权限"><Icon type="project" theme="outlined" style={{cursor: 'pointer'}} onClick={() => this.editRolePermission(r.id)}/></Tooltip>
                             <div style={{width: 20, display:'inline-block'}}></div>
                             <Tooltip title="comming soon..."><Icon type="close" /></Tooltip>
                         </div>
@@ -159,7 +160,7 @@ export default class role extends Component {
                     closable={false}
                     onClose={this.toggleShowPermissionDrawer}
                     visible={this.state.showPermissionDrawer}>
-                    <RolePermission key={targetRole._id} checkedKeys={targetRole.permissions} onChange={this.changeRolePermissions} />
+                    <RolePermission key={targetRole.id} checkedKeys={targetRole.permissions} onChange={this.changeRolePermissions} />
                 </Drawer>
             </div>
         );

@@ -38,7 +38,7 @@ export default class InfoFormModal extends Component {
                             <Input placeholder={'姓名'}/>
                         )}
                     </FormItem>
-                    {targetUser._id ? 
+                    {targetUser.id ? 
                         <FormItem
                             {...formItemLayout}
                             label="UserId" >

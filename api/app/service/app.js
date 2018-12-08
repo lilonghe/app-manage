@@ -34,7 +34,7 @@ class AppService extends Service {
   }
 
   async findOne(appid) {
-    return await this.ctx.model.App.findOne({ where: { appid }, raw: true })
+    return await this.ctx.model.App.findOne({ where: { appid }, raw: true})
   }
 
   async editApp({ appid, name, description }, patchInfo={}) {

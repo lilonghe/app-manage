@@ -28,14 +28,14 @@ export default class PermissionFormModal extends Component {
     }
     
     loopTreeNode = (data) => data.map((item) => {
-        const { targetPermission: { _id } } = this.props;
+        const { targetPermission: { id } } = this.props;
         if(item.type=='permission') return <span></span>;
-        if(item.children && item._id != _id) {
-            return <TreeNode value={item._id} title={item.title} key={item._id}>
+        if(item.children && item.id != id) {
+            return <TreeNode value={item.id} title={item.title} key={item.id}>
                 {this.loopTreeNode(item.children)}
             </TreeNode>
         }
-        return <TreeNode disabled={_id == item._id} value={item._id} title={item.title}  key={item._id}/>
+        return <TreeNode disabled={id == item.id} value={item.id} title={item.title}  key={item.id}/>
     })
 
     render() {

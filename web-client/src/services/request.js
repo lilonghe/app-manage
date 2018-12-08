@@ -3,7 +3,7 @@ import 'whatwg-fetch';
 import { message } from 'antd';
 let host = 'http://47.101.42.102/api/';
 if (process.env.NODE_ENV=='development') {
-    host = 'http://localhost:3000/';
+    host = 'http://localhost:7001/';
 }
 
 const request = async (url, options={ query:{}, method:'GET' }) => {
@@ -27,11 +27,11 @@ const request = async (url, options={ query:{}, method:'GET' }) => {
         }
     }).
         then((response) => response.json().then((data) => {
-            if (data.errcode != 0) {
-                global.actionTip.fail(`[${data.errcode}] ${data.errmsg}`)
-                return { err: data.errmsg, data };
+            if (data.error_code) {
+                global.actionTip.fail(`[${data.error_code}] ${data.error_message}`)
+                return { err: data.error_message, data };
             }
-            return { data: data.data };
+            return { data };
         })).
         catch((err) => {
             global.actionTip.fail(err.message)

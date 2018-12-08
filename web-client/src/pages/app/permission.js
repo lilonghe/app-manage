@@ -59,7 +59,7 @@ export default class AppPermission extends Component {
     expandAllItems = () => {
         const { appDetail: { permissions } } = this.props;
         let keys = [];
-        permissions.map(k => keys.push(k._id));
+        permissions.map(k => keys.push(k.id));
         if(keys.length == this.state.expandItems.length) {
             this.changeExpandItems([]);            
         } else {
@@ -72,7 +72,8 @@ export default class AppPermission extends Component {
         form.validateFields((err, values) => {
             if (!err) {
                 if (this.state.targetPermission.code) {
-                    this.props.editAppPermissionAction({...values, _id: this.state.targetPermission._id, appid: this.props.appDetail.appid}, ({ err,data }) => {
+                    const { code, id } = this.state.targetPermission;
+                    this.props.editAppPermissionAction({...values, code, id , appid: this.props.appDetail.appid}, ({ err,data }) => {
                         if(!err) {
                             this.toggleShowPermissionForm();
                             message.success('编辑成功');
@@ -136,7 +137,7 @@ export default class AppPermission extends Component {
                     <span style={{marginLeft: 10}}>现有共 {permissions.length} 项</span>
                 </div>
                 
-                <Table size="small" expandedRowKeys={this.state.expandItems} onExpandedRowsChange={this.changeExpandItems} bordered={false} rowKey={r => r._id} dataSource={menusTree} pagination={false} columns={columns} />
+                <Table size="small" expandedRowKeys={this.state.expandItems} onExpandedRowsChange={this.changeExpandItems} bordered={false} rowKey={r => r.id} dataSource={menusTree} pagination={false} columns={columns} />
 
                 {this.state.showPermissionForm && <PermissionForm key={this.state.targetPermission.code} targetPermission={this.state.targetPermission} visible={this.state.showPermissionForm} 
                     onCancel={this.toggleShowPermissionForm}

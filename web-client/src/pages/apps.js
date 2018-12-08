@@ -40,7 +40,7 @@ export default class index extends Component {
         const form = this.formRef.props.form;
         form.validateFields((err, values) => {
             if (!err) {
-                if (this.state.targetApp._id) {
+                if (this.state.targetApp.id) {
                     this.props.editAppAction({...values, appid: this.state.targetApp.appid}, ({ err, data }) => {
                         if (!err) {
                             message.success('编辑成功');
@@ -74,7 +74,7 @@ export default class index extends Component {
     editApp = (id, e) => {
         e.preventDefault();
         const { apps: { list } } = this.props;
-        const app = list.find(item => item._id == id);
+        const app = list.find(item => item.id == id);
         if (app) {
             this.setState({
                 targetApp: app
@@ -100,7 +100,7 @@ export default class index extends Component {
                     renderItem={item => (
                         <Link to={`/apps/${item.appid}/info`}>
                             <List.Item className={styles.appItem} actions={[<Icon 
-                                    onClick={(e) => this.editApp(item._id, e)}
+                                    onClick={(e) => this.editApp(item.id, e)}
                                     type="edit" theme="outlined" style={{cursor: 'pointer', marginRight: 10}}/>]}>
                                 <List.Item.Meta
                                     avatar={<Avatar shape="square" src={item.icon} />}
@@ -114,13 +114,13 @@ export default class index extends Component {
 
 
                 <InfoForm 
-                    key={this.state.targetApp._id}
+                    key={this.state.targetApp.id}
                     targetApp={this.state.targetApp}
                     visible={this.state.showInfoForm} 
                     onCancel={this.toggleShowInfoForm}
                     wrappedComponentRef={this.saveFormRef} 
                     onOk={this.handleSubmit} 
-                    title={this.state.targetApp._id ? "编辑应用":"添加应用"} />
+                    title={this.state.targetApp.id ? "编辑应用":"添加应用"} />
             </div>
         )
     }

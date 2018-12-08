@@ -47,7 +47,7 @@ export default class User extends Component {
         form.validateFields((err, values) => {
             if (!err) {
                 const { users:{ targetUser } } = this.props;
-                if(!targetUser._id) {
+                if(!targetUser.id) {
                     this.props.addUserAction({...values}, (({err}) => {
                         if (!err) {
                             message.success('添加成功');
@@ -75,7 +75,7 @@ export default class User extends Component {
     }
 
     editUserPerms = async (id) => {
-        let user = this.props.users.userList.find(user => user._id == id);
+        let user = this.props.users.userList.find(user => user.id == id);
 
         if (user) {
             this.props.changeTargetUser(user);
@@ -99,7 +99,7 @@ export default class User extends Component {
             {title:'更新时间', dataIndex:'updatedAt'},
             {title:'操作', dataIndex:'action', render: (text, record) =>{
                 return <div>
-                    <Button onClick={() => this.editUserPerms(record._id)}>编辑权限</Button>
+                    <Button onClick={() => this.editUserPerms(record.id)}>编辑权限</Button>
                     <Button>删除</Button>
                 </div>
             }},
@@ -117,13 +117,13 @@ export default class User extends Component {
 
 
                 <InfoForm 
-                    key={targetUser._id}
+                    key={targetUser.id}
                     targetUser={targetUser}
                     visible={this.state.showInfoForm} 
                     onCancel={this.toggleShowInfoForm}
                     wrappedComponentRef={this.saveFormRef} 
                     onOk={this.handleSubmit} 
-                    title={targetUser._id ? "编辑用户":"添加用户"} />
+                    title={targetUser.id ? "编辑用户":"添加用户"} />
 
                 <ChooseTargetApp onChange={this.changeTargetApp} />
                 <EditUserPermission />
