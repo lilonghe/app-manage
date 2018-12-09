@@ -41,7 +41,7 @@ export function editAppRolePermission(data) {
 }
 
 export function editAppInfo(data) {
-    return request(`app`, {method: 'put', body: JSON.stringify(data)});
+    return request(`apps`, {method: 'put', body: JSON.stringify(data)});
 }
 
 export function searchUser(data) {
