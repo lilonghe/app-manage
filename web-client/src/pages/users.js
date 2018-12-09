@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import { Input, Table, Button, message } from 'antd';
-import { searchUserAction, addUserAction, changeShowChooseTargetApp, changeShowEditUserPermission, changeTargetUser } from '../store/action';
+import { Input, Table, Button, message, Icon } from 'antd';
+import { searchUserAction, addUserAction, editUserAction, changeShowChooseTargetApp, changeShowEditUserPermission, changeTargetUser } from '../store/action';
 import { connect } from 'react-redux';
 import InfoForm from '../components/user/infoForm';
 import ChooseTargetApp from '../components/app/chooseTargetApp';
@@ -9,7 +9,7 @@ import EditUserPermission from '../components/user/userPermission';
 
 @connect(({ users, apps }) => {
     return { users, apps };
-}, { searchUserAction,addUserAction, changeShowChooseTargetApp, changeShowEditUserPermission, changeTargetUser })
+}, { searchUserAction,addUserAction, editUserAction, changeShowChooseTargetApp, changeShowEditUserPermission, changeTargetUser })
 export default class User extends Component {
     constructor(props) {
         super(props);
@@ -46,8 +46,8 @@ export default class User extends Component {
         const form = this.formRef.props.form;
         form.validateFields((err, values) => {
             if (!err) {
-                const { users:{ targetUser } } = this.props;
-                if(!targetUser.id) {
+                const { users:{ targetUser:{ id, userid } } } = this.props;
+                if(!id) {
                     this.props.addUserAction({...values}, (({err}) => {
                         if (!err) {
                             message.success('添加成功');
@@ -55,6 +55,14 @@ export default class User extends Component {
                             this.searchUser();
                         }
                     }))
+                } else {
+                    this.props.editUserAction({...values, id, userid}, ({err}) =>{
+                        if (!err) {
+                            message.success('编辑成功');
+                            this.toggleShowInfoForm();
+                            this.searchUser();
+                        }
+                    });
                 }
             }
         });
@@ -65,6 +73,7 @@ export default class User extends Component {
     }
 
     addUser = () =>{
+        this.props.changeTargetUser({});
         this.toggleShowInfoForm();
     }
 
@@ -90,17 +99,28 @@ export default class User extends Component {
         this.props.changeShowEditUserPermission(true);
     }
 
+    editUser = async (id) => {
+        let user = this.props.users.userList.find(user => user.id == id);
+        if (user) {
+            await this.props.changeTargetUser(user);
+            this.toggleShowInfoForm();
+        }
+    }
+
     render() {
         const usersColumns = [
-            {title:"唯一标识", dataIndex: 'userId' },
+            {title:"唯一标识", dataIndex: 'userid' },
             {title:'名字', dataIndex:'name'},
-            {title:'部门', dataIndex:'deptName'},
-            {title:'创建时间', dataIndex:'createdAt'},
-            {title:'更新时间', dataIndex:'updatedAt'},
+            {title:'部门', dataIndex:'dept_name'},
+            {title:'创建时间', dataIndex:'created_at'},
+            {title:'更新时间', dataIndex:'updated_at'},
             {title:'操作', dataIndex:'action', render: (text, record) =>{
                 return <div>
-                    <Button onClick={() => this.editUserPerms(record.id)}>编辑权限</Button>
-                    <Button>删除</Button>
+                    <Icon type="edit" onClick={() => this.editUser(record.id)}/>
+                    <div style={{width: 20, display:'inline-block'}}></div>
+                    <Icon type="project" onClick={() => this.editUserPerms(record.id)}>编辑权限</Icon>
+                    <div style={{width: 20, display:'inline-block'}}></div>
+                    <Icon type="delete">删除</Icon>
                 </div>
             }},
         ]

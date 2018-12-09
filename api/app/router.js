@@ -23,4 +23,9 @@ module.exports = app => {
   router.post('/roles/permissions', controller.permission.addRolePermission);
   router.delete('/roles/permissions', controller.permission.removeRolePermission);
   router.put('/roles/permissions', controller.permission.setRolePermission);
+
+  router.get('/users', controller.user.getUsers);
+  router.post('/users', controller.user.addUser);
+  router.put('/users', controller.user.editUser);
+
 };

@@ -42,30 +42,30 @@ export default class InfoFormModal extends Component {
                         <FormItem
                             {...formItemLayout}
                             label="UserId" >
-                            <span>{targetUser.userId}</span>
+                            <span>{targetUser.userid}</span>
                         </FormItem> :<FormItem
                             {...formItemLayout}
                             label="UserId" >
-                        {getFieldDecorator('userId', {
+                        {getFieldDecorator('userid', {
                             rules: [{
                                 pattern: /^[A-Za-z_]{1,20}$/, message: '字母或下换线, 最多20个字符'
                             }, {
                                 required: true, message: '未输入 userId',
                             }],
-                            initialValue: ''
+                            initialValue: targetUser.userid
                         })(
-                            <Input placeholder={'唯一用户表示'}/>
+                            <Input placeholder={'唯一用户标识'}/>
                         )}
                     </FormItem>}
                     <FormItem
                         {...formItemLayout}
                         label="部门"
                     >
-                        {getFieldDecorator('deptName', {
+                        {getFieldDecorator('dept_name', {
                             rules: [{
                                 max: 120, message: '最多120个字符'
                             }],
-                            initialValue: targetUser.deptName
+                            initialValue: targetUser.dept_name
                         })(
                             <Input.TextArea  placeholder={'部门'}/>
                         )}

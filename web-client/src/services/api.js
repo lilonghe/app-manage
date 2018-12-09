@@ -52,6 +52,10 @@ export function addUser(data) {
     return request(`users`, {method: 'post', body: JSON.stringify(data)});
 }
 
+export function editUser(data) {
+    return request(`users`, {method: 'put', body: JSON.stringify(data)});
+}
+
 export function userAddRole(data) {
     return request(`users/${data.userid}/apps/${data.appid}/roles/${data.rolecode}`, {method: 'post'});
 }

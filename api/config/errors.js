@@ -47,3 +47,13 @@ exports.ErrPermissionCodes = {
     error_code: 'permission_codes',
     error_message: '权限CODE无效，权限数据已更新，请刷新页面重新加载'
 }
+
+exports.ErrRepeatedUser = {
+    error_code: 'repeated_user',
+    error_message:'用户唯一标识重复，请确认提交的数据'
+}
+
+exports.ErrUserNotFound = {
+    error_code: 'user_not_found',
+    error_message:'用户不存在，请确认提交的数据'
+}
