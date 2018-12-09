@@ -4,9 +4,22 @@ const errors = require('../../config/errors');
 
 class UserService extends Service {
 
-    async getUsers(limit, offset) {
-        const users = await this.ctx.model.User.findAll({ limit, offset });
-        const count = await this.ctx.model.User.count();
+    async getUsers(limit, offset, keyword) {
+        let users = [], count = 0;
+        if (keyword) {
+            const { Op } = this.app.Sequelize;
+            keyword += "%";
+            const sql = { limit, offset, where: { [Op.or]: [
+                { name: { [Op.like]: keyword } },
+                { userid:{ [Op.like]: keyword } }
+            ]}};
+            users = await this.ctx.model.User.findAll(sql);
+            count = await this.ctx.model.User.count(sql);
+        } else {
+            users = await this.ctx.model.User.findAll({ limit, offset });
+            count = await this.ctx.model.User.count();
+        }
+        
         return { data: users, total: count }
     }
 
@@ -35,7 +48,7 @@ class UserService extends Service {
         if (!repeatedUser) {
             return errors.ErrUserNotFound;
         }
-        
+
         let patchInfo = {
             action_type: 'userinfo',
             action:'create',

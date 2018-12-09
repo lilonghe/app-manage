@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import InfoForm from '../components/user/infoForm';
 import ChooseTargetApp from '../components/app/chooseTargetApp';
 import EditUserPermission from '../components/user/userPermission';
+import styles from './users.styl';
 
 
 @connect(({ users, apps }) => {
@@ -115,11 +116,9 @@ export default class User extends Component {
             {title:'创建时间', dataIndex:'created_at'},
             {title:'更新时间', dataIndex:'updated_at'},
             {title:'操作', dataIndex:'action', render: (text, record) =>{
-                return <div>
+                return <div className={styles.action}>
                     <Icon type="edit" onClick={() => this.editUser(record.id)}/>
-                    <div style={{width: 20, display:'inline-block'}}></div>
                     <Icon type="project" onClick={() => this.editUserPerms(record.id)}>编辑权限</Icon>
-                    <div style={{width: 20, display:'inline-block'}}></div>
                     <Icon type="delete">删除</Icon>
                 </div>
             }},
@@ -129,7 +128,7 @@ export default class User extends Component {
         return (
             <div style={{width: 1200, margin: 'auto'}}>
                 <Button onClick={this.addUser}>添加用户</Button> 共{totalUser}个用户
-                <Input onChange={this.changeKeyword}/>
+                <Input placeholder="输入关键词搜索用户" onChange={this.changeKeyword}/>
                 <Table dataSource={userList} columns={usersColumns} pagination={{
                     total: totalUser,
                     hideOnSinglePage: true

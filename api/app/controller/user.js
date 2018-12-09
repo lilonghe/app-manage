@@ -7,15 +7,21 @@ const helpers = require('../../config/helpers');
 class UserController extends Controller {
 
     async getUsers() {
-        const { limit, offset } = this.ctx.queries;
+        let { limit, offset, keyword } = this.ctx.request.query;
         if (!limit || !offset) {
             return errors.ErrMissParam;
         }
+        
+        limit = parseInt(limit);
+        offset = parseInt(offset);
+        
         if (limit > 100) {
             limit = 100;
         }
 
-        return this.ctx.service.user.getUsers();
+        
+
+        return this.ctx.service.user.getUsers(limit, offset, keyword);
     }
 
     async addUser() {
