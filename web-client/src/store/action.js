@@ -188,7 +188,7 @@ export const userAddRoleAction = (params, cb) => {
         if (!err) {
             dispatch({
                 type: actionTypes.onAddUserRole,
-                value: params.roleid
+                value: params.role_id
             });
             global.actionTip.success(`添加角色`);
             cb && cb({ err, data });
@@ -216,7 +216,7 @@ export const userRemoveRoleAction = (params, cb) => {
         if (!err) {
             dispatch({
                 type: actionTypes.onRemoveUserRole,
-                value: params.roleid
+                value: params.role_id
             });
             global.actionTip.success(`移除角色`);
             cb && cb({ err, data });

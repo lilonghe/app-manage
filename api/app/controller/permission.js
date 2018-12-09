@@ -62,12 +62,12 @@ class PermissionController extends Controller {
     }
 
     async getAppRoles() {
-        const appid = this.ctx.request.queries.appid;
+        const { appid, with_permission} = this.ctx.request.query;
         if (!appid) {
             return errors.ErrMissParam;
         }
 
-        return await this.ctx.service.role.getAppRoles(appid)
+        return await this.ctx.service.role.getAppRoles(appid, with_permission)
     }
 
     async getAppRolePermissions() {

@@ -28,4 +28,7 @@ module.exports = app => {
   router.post('/users', controller.user.addUser);
   router.put('/users', controller.user.editUser);
 
+  router.get('/users/roles', controller.user.getUserAppRoles);
+  router.post('/users/roles', controller.user.addUserAppRole);
+  router.delete('/users/roles', controller.user.removeUserAppRole);
 };

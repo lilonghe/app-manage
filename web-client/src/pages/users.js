@@ -145,7 +145,7 @@ export default class User extends Component {
                     title={targetUser.id ? "编辑用户":"添加用户"} />
 
                 <ChooseTargetApp onChange={this.changeTargetApp} />
-                <EditUserPermission />
+                <EditUserPermission key={targetUser.id} />
             </div>
         )
     }

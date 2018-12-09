@@ -57,3 +57,13 @@ exports.ErrUserNotFound = {
     error_code: 'user_not_found',
     error_message:'用户不存在，请确认提交的数据'
 }
+
+exports.ErrUserAleradyHasRole = {
+    error_code: 'user_alerady_has_role',
+    error_message: '用户已拥有此角色'
+}
+
+exports.ErrUserNotHasRole = {
+    error_code: 'user_not_has_role',
+    error_message: '用户未拥有此角色'
+}

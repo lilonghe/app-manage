@@ -46,6 +46,33 @@ class UserController extends Controller {
         return await this.ctx.service.user.editUser(this.ctx.request.body)
     }
 
+    async addUserAppRole() {
+        const rule = {
+            user_id: 'int',
+            role_id: 'int'
+        }
+        this.ctx.validate(rule)
+        return this.ctx.service.user.addUserAppRole(this.ctx.request.body)
+    }
+
+    async removeUserAppRole() {
+        const rule = {
+            user_id: 'int',
+            role_id: 'int'
+        }
+        this.ctx.validate(rule)
+        return this.ctx.service.user.removeUserAppRole(this.ctx.request.body)
+    }
+
+    async getUserAppRoles() {
+        const { appid, user_id } = this.ctx.request.query;
+        if (!appid || !user_id) {
+            return errors.ErrMissParam;
+        }
+
+        return await this.ctx.service.user.getUserAppRoles(appid, user_id);
+    }
+
 }
 
 module.exports = UserController;

@@ -13,7 +13,7 @@ export function addApp(data) {
 }
 
 export function fetchAppRoles(appid) {
-    return request(`roles?appid=${appid}`);
+    return request(`roles?appid=${appid}&with_permission=true`);
 }
 
 export function getAppPermissions(appid) {
@@ -57,13 +57,13 @@ export function editUser(data) {
 }
 
 export function userAddRole(data) {
-    return request(`users/${data.userid}/apps/${data.appid}/roles/${data.rolecode}`, {method: 'post'});
+    return request(`users/roles`, {method: 'post', body: JSON.stringify(data)});
 }
 
 export function userRemoveRole(data) {
-    return request(`users/${data.userid}/apps/${data.appid}/roles/${data.rolecode}`, {method: 'delete'});
+    return request(`users/roles`, {method: 'delete', body: JSON.stringify(data)});
 }
 
 export function getUserAppRoleIds(data) {
-    return request(`users/${data.userid}/apps/${data.appid}/roles`, {method: 'get'});
+    return request(`users/roles`, {method: 'get', query: data});
 }

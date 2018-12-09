@@ -23,7 +23,7 @@ export default class UserPermission extends Component {
             appid = targetApp.appid;
         }
         this.props.fetchUserAppSchema(appid);
-        this.props.getUserAppRoleIdsAction({ appid, userid: id })
+        this.props.getUserAppRoleIdsAction({ appid, user_id: id })
     }
 
     componentWillReceiveProps(nextProps) {
@@ -41,12 +41,12 @@ export default class UserPermission extends Component {
         this.props.changeShowChooseTargetApp(true)
     }
 
-    changeRole = (roleid, rolecode, val) => {
-        const { apps: { targetApp: { appid }}, users: { targetUser: { id } }  } = this.props;
+    changeRole = (role_id, rolecode, val) => {
+        const { users: { targetUser: { id } }  } = this.props;
         if (val) {
-            this.props.userAddRoleAction({ appid, roleid, rolecode, userid: id })
+            this.props.userAddRoleAction({ role_id, user_id: id })
         } else {
-            this.props.userRemoveRoleAction({ appid, roleid, rolecode, userid: id })
+            this.props.userRemoveRoleAction({ role_id, user_id: id })
         }
     }
 
@@ -82,7 +82,7 @@ export default class UserPermission extends Component {
                 onClose={this.closeDrawer}
                 style={{height: '100%', display: 'flex', padding: 15}}>
                 {roles.length == 0 && <div>应用未创建角色</div>}
-                <div style={{display: 'flex', flexDirection: 'row', height: '100%', flex: 1}}>
+                {roles.length > 0 && <div style={{display: 'flex', flexDirection: 'row', height: '100%', flex: 1}}>
                     <div style={{borderRight: '1px solid #CCC', flex: 1}}>
                         <p style={{color: '#999'}}>操作角色</p>
                         {roles.map(role => {
@@ -100,7 +100,7 @@ export default class UserPermission extends Component {
                             {treeDom}
                         </Tree>
                     </div>
-                </div>
+                    </div> }
             </Drawer>
         )
     }

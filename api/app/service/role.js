@@ -3,12 +3,33 @@ const helpers = require('../../config/helpers');
 const errors = require('../../config/errors');
 
 class RoleService extends Service {
-    async getAppRoles(appid) {
+    async getAppRoles(appid, with_permission=false) {
         const app = await this.ctx.service.app.findOne(appid);
         if (!app) {
             return errors.ErrAppNotFound;
         }
-        return await this.ctx.model.Role.findAll({ where: { appid: app.id } });
+
+        let roles = await this.ctx.model.Role.findAll({ where: { appid: app.id }, raw: true});
+        if (with_permission) {
+            const permissions = await this.ctx.service.permission.getPermissionsByApp(appid);
+            const rolePerms = await this.getAppAllRolesPermissions(app.id);
+            roles.map((role, index) => {
+                rolePerms.map(rp => {
+                    if (rp.role_code == role.code) {
+                        if (!roles[index].permissions) {
+                            roles[index].permissions = [];
+                        }
+                        roles[index].permissions.push(rp.permission_code);
+                    }
+                });
+            })
+
+        }
+        return roles;
+    }
+
+    async getAppRoleById(id) {
+        return await this.ctx.model.Role.findOne({ where:{id} })
     }
 
     async addAppRole(data) {
@@ -162,6 +183,10 @@ class RoleService extends Service {
             [Op.in]: permCodesArr
         }}});
         return perms;
+    }
+
+    async getAppAllRolesPermissions(app_id) {
+        return await this.ctx.model.RolePermission.findAll({where: { appid: app_id }})
     }
 
     async setAppRolePermission({ appid, role_code, permission_codes }) {
