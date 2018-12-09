@@ -22,6 +22,7 @@ export default class UserPermission extends Component {
         if(!appid) {
             appid = targetApp.appid;
         }
+        if (!appid || !id) return;
         this.props.fetchUserAppSchema(appid);
         this.props.getUserAppRoleIdsAction({ appid, user_id: id })
     }
