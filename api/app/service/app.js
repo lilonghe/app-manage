@@ -18,7 +18,8 @@ class AppService extends Service {
     }
 
     let patchInfo = {
-      action_type: 'add_app', 
+      action_type: 'edit_app', 
+      action: 'add',
       after_source: JSON.stringify({...oldApp, name, description})
     };
 
@@ -46,6 +47,7 @@ class AppService extends Service {
       appid: oldApp.id,
       before_source: JSON.stringify(oldApp),
       action_type: 'edit_app', 
+      action: 'edit',
       after_source: JSON.stringify({...oldApp, name, description})
     };
 

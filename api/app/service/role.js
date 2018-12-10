@@ -45,7 +45,7 @@ class RoleService extends Service {
         }
 
         let patchInfo = { 
-            action_type: 'role',
+            action_type: 'edit_role',
             action: 'add',
             appid: data.appid,
         }
@@ -74,8 +74,8 @@ class RoleService extends Service {
         data.permission = oldRole.permission;
 
         let patchInfo = { 
-            action_type: 'role',
-            action: 'add',
+            action_type: 'edit_role',
+            action: 'edit',
             appid: data.appid,
             before_source: JSON.stringify(oldRole)
         }
@@ -111,7 +111,7 @@ class RoleService extends Service {
         }
 
         let patchInfo = { 
-            action_type: 'role',
+            action_type: 'edit_role',
             action: 'add_permission',
             appid: app.id
         }
@@ -150,7 +150,7 @@ class RoleService extends Service {
         }
 
         let patchInfo = { 
-            action_type: 'role',
+            action_type: 'edit_role',
             action: 'remove_permission',
             appid: app.id,
             before_source: JSON.stringify(repeated)
@@ -223,7 +223,7 @@ class RoleService extends Service {
         // }
 
         let patchInfo = { 
-            action_type: 'role',
+            action_type: 'edit_role',
             action: 'set_permission',
             appid: app.id,
             after_source: JSON.stringify(permission_codes)

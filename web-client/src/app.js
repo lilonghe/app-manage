@@ -4,6 +4,7 @@ import AppsPage from './pages/apps';
 import AppDetailPage from './pages/appDetail';
 import MainLayout from './components/layout/main';
 import UsersPage from './pages/users';
+import LogsPage from './pages/logs';
 import { notification  } from 'antd';
 
 global.actionTip = {
@@ -36,6 +37,7 @@ export default class App extends Component {
                         <Redirect exact path="/" to="/users"/>
                         <Route exact path='/users' component={UsersPage} />
                         <Route exact path='/apps' component={AppsPage} />
+                        <Route exact path='/logs' component={LogsPage} />
                         <Route path='/apps/:appId' component={AppDetailPage} />
                     </Switch>
                 </MainLayout>

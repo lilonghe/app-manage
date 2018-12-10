@@ -92,6 +92,7 @@ class UserService extends Service {
             action_type: 'user_permission',
             action:'add_role',
             userid: user.id,
+            after: `添加 [${role.name}] 角色`
         }
 
         await this.ctx.model.transaction(async (t) => {
@@ -126,7 +127,8 @@ class UserService extends Service {
             action_type: 'user_permission',
             action:'remove_role',
             userid: user.id,
-            before_source: JSON.stringify(repeated)
+            before_source: JSON.stringify(repeated),
+            after: `移除 [${role.name}] 角色`
         }
 
         await this.ctx.model.transaction(async (t) => {

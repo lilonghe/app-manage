@@ -67,3 +67,11 @@ export function userRemoveRole(data) {
 export function getUserAppRoleIds(data) {
     return request(`users/roles`, {method: 'get', query: data});
 }
+
+export function getAppLogs() {
+    return request(`logs/apps`, {method: 'get'});
+}
+
+export function getUserLogs() {
+    return request(`logs/users`, {method: 'get'});
+}
