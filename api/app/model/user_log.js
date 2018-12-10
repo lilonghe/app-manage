@@ -6,6 +6,7 @@ module.exports = app => {
   const UserLog = app.model.define('user_log', {
     id: { type: INTEGER, primaryKey: true, autoIncrement: true },
     userid: INTEGER,
+    app_id: INTEGER,
     action: STRING(30),
     action_type: STRING(30),
     reason: STRING(200),

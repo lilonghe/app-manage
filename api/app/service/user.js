@@ -92,6 +92,7 @@ class UserService extends Service {
             action_type: 'user_permission',
             action:'add_role',
             userid: user.id,
+            app_id: role.appid,
             after: `添加 [${role.name}] 角色`
         }
 
@@ -127,6 +128,7 @@ class UserService extends Service {
             action_type: 'user_permission',
             action:'remove_role',
             userid: user.id,
+            app_id: role.appid,
             before_source: JSON.stringify(repeated),
             after: `移除 [${role.name}] 角色`
         }

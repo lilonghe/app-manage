@@ -17,8 +17,9 @@ class LogService extends Service {
     async getUserLogs({ limit=20, offset=0 }) {
         const Sequelize = this.app.Sequelize;
         const data = await this.ctx.model.query(`
-            SELECT user_logs.id, users.userid, users.name, users.dept_name, user_logs.after, user_logs.action, user_logs.action_type, user_logs.created_at FROM user_logs
+            SELECT user_logs.id, users.userid, users.name, users.dept_name, apps.appid, apps.name 'app_name', user_logs.after, user_logs.action, user_logs.action_type, user_logs.created_at FROM user_logs
             left join users on users.id = user_logs.userid
+            left join apps on apps.id = user_logs.app_id
             order by user_logs.created_at desc
             limit ? offset ?
         `, { type: Sequelize.QueryTypes.SELECT, replacements:[limit, offset] });
