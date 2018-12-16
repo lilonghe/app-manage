@@ -6,6 +6,8 @@ module.exports = app => {
   const RolePermission = app.model.define('role_permission', {
     id: { type: INTEGER, primaryKey: true, autoIncrement: true },
     appid: INTEGER,
+    role_id: INTEGER,
+    permission_id: INTEGER,
     role_code: STRING(50),
     permission_code: STRING(50),
     created_at: DATE,

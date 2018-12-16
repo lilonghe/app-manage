@@ -35,4 +35,7 @@ module.exports = app => {
   router.get('/logs/apps', controller.log.getAppLogs);
   router.get('/logs/users', controller.log.getUserLogs);
 
+
+  router.get('/services/check-user-permission', controller.user.checkUserPermission);
+  router.get('/services/get-user-permissions', controller.user.getUserPermissions);
 };

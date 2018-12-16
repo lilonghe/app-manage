@@ -118,7 +118,7 @@ class RoleService extends Service {
 
         let newRolePermission = await this.ctx.model.transaction(async (t) => {
             const rolePermission = await this.ctx.model.RolePermission.create({  
-                appid: app.id, role_code: oldRole.code, permission_code: permission_code 
+                appid: app.id, role_id: oldRole.id, permission_id: permission.id, role_code: oldRole.code, permission_code: permission_code 
             }, { transaction: t });
 
             patchInfo.after_source = JSON.stringify(rolePermission);
@@ -233,9 +233,9 @@ class RoleService extends Service {
             // remove all
             await this.ctx.model.RolePermission.destroy({ where: { appid: app.id, role_code: oldRole.code } }, { transaction: t })
             // loop check then add.
-            for(let i=0; i<permission_codes.length; i++) {
+            for(let i=0; i<perms.length; i++) {
                 await this.ctx.model.RolePermission.create({  
-                    appid: app.id, role_code: oldRole.code, permission_code: permission_codes[i] 
+                    appid: app.id, role_id: oldRole.id, permission_id: perms[i].id, role_code: oldRole.code, permission_code: perms[i].code
                 }, { transaction: t });
             }
             await this.ctx.model.AppLog.create(patchInfo, { transaction: t });

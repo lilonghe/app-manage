@@ -73,6 +73,24 @@ class UserController extends Controller {
         return await this.ctx.service.user.getUserAppRoles(appid, user_id);
     }
 
+    async getUserPermissions() {
+        const { appid, userid } = this.ctx.request.query;
+        if (!appid || !userid) {
+            return errors.ErrMissParam;
+        }
+
+        return await this.ctx.service.user.getUserPermissions(appid, userid);
+    }
+
+    async checkUserPermission() {
+        const { appid, userid, permission_code } = this.ctx.request.query;
+        if (!appid || !userid || !permission_code) {
+            return errors.ErrMissParam;
+        }
+
+        return await this.ctx.service.user.checkUserPermission(appid, userid, permission_code);
+    }
+
 }
 
 module.exports = UserController;

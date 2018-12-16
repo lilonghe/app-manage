@@ -159,6 +159,40 @@ class UserService extends Service {
 
         return ids;
     }
+
+    // 需要的加上redis缓存基本上就没有太大性能问题了
+    async getUserPermissions(appid, userid) {
+        const app = await this.ctx.service.app.findOne(appid);
+        if (!app) {
+            return errors.ErrAppNotFound;
+        }
+        const user = await this.getUserByUserid(userid);
+        if(!user) {
+            return errors.ErrUserNotFound
+        }
+
+        const Sequelize = this.app.Sequelize;
+        const data = await this.ctx.model.query(`
+            select permissions.* from permissions
+            left join role_permissions on permissions.id = role_permissions.permission_id
+            left join user_roles on user_roles.role_id = role_permissions.role_id
+            where user_roles.user_id = ? and permissions.appid = ?
+        `, { type: Sequelize.QueryTypes.SELECT, replacements:[user.id, app.id] });
+        return data;
+    }
+
+    async checkUserPermission(appid, userid, permission_code) {
+        let userPermissions = await this.getUserPermissions(appid, userid, permission_code);
+        if (userPermissions.error_code) {
+            return userPermissions;
+        }
+
+        let match = userPermissions.find(perm => perm.code == permission_code);
+        if (match) {
+            return helpers.ActionResult(true);
+        }
+        return helpers.ActionResult(false);
+    }
 }
 
 module.exports = UserService;

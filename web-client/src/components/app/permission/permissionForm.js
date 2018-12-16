@@ -1,5 +1,5 @@
 import React, {  Component } from "react";
-import {Modal, Form, Input, Switch, Radio, TreeSelect} from 'antd';
+import {Modal, Form, Input, Switch, Radio, TreeSelect, InputNumber } from 'antd';
 const FormItem = Form.Item;
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
@@ -144,7 +144,7 @@ export default class PermissionFormModal extends Component {
                             <Input placeholder={'url'}/>
                         )}
                     </FormItem> }
-                    {typeName=='menu' && <FormItem
+                    {!typeSimple && <FormItem
                         {...formItemLayout}
                         label="父级"
                     >
@@ -153,10 +153,22 @@ export default class PermissionFormModal extends Component {
                         })(
                             <TreeSelect
                                 dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-                                placeholder="Please select"
+                                placeholder="选择父级节点"
                             >
                                 {treeDom}
                             </TreeSelect>
+                        )}
+                    </FormItem> }
+                    { !typeSimple && <FormItem
+                        {...formItemLayout}
+                        label="Rank"
+                        help="从小到大排序"
+                    >
+                        {getFieldDecorator('rank', {
+                            rules: [],
+                            initialValue: targetPermission.rank || 0
+                        })(
+                            <InputNumber />
                         )}
                     </FormItem> }
                 </Form>

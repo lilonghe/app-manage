@@ -15,6 +15,7 @@ module.exports = app => {
     style: STRING(200),
     icon:  STRING(200),
     parentId: INTEGER,
+    rank: INTEGER,
     created_at: DATE,
     updated_at: DATE,
   });
