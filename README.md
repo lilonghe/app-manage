@@ -22,4 +22,21 @@ $ npm start
 ```
 
 ------
-2018-10-14 总感觉目前的 Redux 怎么用都不得劲，贼鸡儿烦，准备换成 Mobx 或者使用 Dva.
+随便找了一个测试工具跑了下，不知道跑的对不对。测试时表现出`CPU`是瓶颈， `QPS 300`时`CPU`占用率为`75%-90%`，`QPS 400`时`CPU`占用率为`100%`，成功率基本就`80%`。内存一直保持为`400MB`以下，基本是没有大的波动。
+
+tool: [https://github.com/tsenart/vegeta](vegeta)  
+server: 阿里云轻量应用服务器，1c2g1u  
+client: 家用百兆电信  
+config: 持续时长=30s 并发=300 每秒=300
+
+
+无缓存下测试结果：
+```
+Requests      [total, rate]            9000, 300.03
+Duration      [total, attack, wait]    30.0090448s, 29.9970985s, 11.9463ms
+Latencies     [mean, 50, 95, 99, max]  271.846144ms, 24.412676ms, 965.842875ms, 995.090769ms, 1.0151335s
+Bytes In      [total, mean]            16029000, 1781.00
+Bytes Out     [total, mean]            0, 0.00
+Success       [ratio]                  100.00%
+Status Codes  [code:count]             200:9000
+```
