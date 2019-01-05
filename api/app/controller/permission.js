@@ -61,6 +61,17 @@ class PermissionController extends Controller {
         return helpers.ActionResult(changedRows > 0);
     }
 
+    async removePermission() {
+        const createRule = {
+            appid: { type: 'string' },
+            code: { type: 'string' },
+        }
+        this.ctx.validate(createRule);
+        
+        const rows = await this.ctx.service.permission.removePermission(this.ctx.request.body);
+        return helpers.ActionResult(rows > 0);
+    }
+
     async getAppRoles() {
         const { appid, with_permission} = this.ctx.request.query;
         if (!appid) {
@@ -95,6 +106,19 @@ class PermissionController extends Controller {
         }
         this.ctx.validate(createRule);
         const changedRows = await this.ctx.service.role.editAppRole(this.ctx.request.body);
+        if (isNaN(changedRows)) {
+            return changedRows;
+        }
+        return helpers.ActionResult(changedRows > 0);
+    }
+
+    async removeAppRole() {
+        const createRule = {
+            appid: { type: 'string' },
+            code: { type: 'string' },
+        }
+        this.ctx.validate(createRule);
+        const changedRows = await this.ctx.service.role.removeAppRole(this.ctx.request.body);
         if (isNaN(changedRows)) {
             return changedRows;
         }

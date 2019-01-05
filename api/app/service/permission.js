@@ -55,7 +55,7 @@ class PermissionService extends Service {
         let patchInfo = { 
             action_type: 'edit_permission',
             action: 'edit',
-            appi: data.appid,
+            appid: data.appid,
             before_source: JSON.stringify(oldPerm)
         }
 
@@ -63,11 +63,41 @@ class PermissionService extends Service {
         patchInfo.after_source = JSON.stringify(data);
 
         let changeRows = await this.ctx.model.transaction(async (t) => {
-            let rows = await this.ctx.model.Permission.update({ ...oldPerm,...data }, {where: { id: oldPerm.id }});
+            let rows = await this.ctx.model.Permission.update({ ...oldPerm,...data }, {where: { id: oldPerm.id }, transaction: t});
             await this.ctx.model.AppLog.create(patchInfo);
             return rows;
         });
         return helpers.SequelizeUpdateResu(changeRows);
+    }
+
+    async removePermission({ appid, code }) {
+        const app = await this.ctx.service.app.findOne(appid);
+        if (!app) {
+            return errors.ErrAppNotFound;
+        }
+
+        const oldPerm = await this.getAppPermissionByCodeAndApp(app.appid, code);
+        if (!oldPerm) {
+            return errors.ErrPermissionCodeNotFound;
+        } 
+
+        let patchInfo = { 
+            action_type: 'delete_permission',
+            action: 'delete',
+            appid: app.appid,
+            before_source: JSON.stringify(oldPerm)
+        }
+
+        let rows =  await this.ctx.model.transaction(async (t) => {
+            // remove permission
+            let rows = await this.ctx.model.Permission.destroy({where: { id: oldPerm.id }, transaction: t});
+            // remove role permission map item, role patch ?
+            await this.ctx.model.RolePermission.destroy({where: { permission_id: oldPerm.id } }, { transaction: t });
+            await this.ctx.model.AppLog.create(patchInfo);
+            return rows;
+        });
+
+        return helpers.SequelizeUpdateResu(rows);
     }
 
     async getAppPermissionByCodeAndApp(appid, code) {

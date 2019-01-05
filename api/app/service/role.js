@@ -89,6 +89,33 @@ class RoleService extends Service {
         return newRole;
     }
 
+    async removeAppRole({ appid, code }) {
+        const app = await this.ctx.service.app.findOne(data.appid);
+        if (!app) {
+            return errors.ErrAppNotFound;
+        }
+
+        const oldRole = await this.getRoleByAppIdAndCode(app.id, code)
+        if (!oldRole) {
+            return errors.ErrRoleCodeNotFound;
+        }
+
+        let patchInfo = { 
+            action_type: 'delete_role',
+            action: 'delete',
+            appid: oldRole.appid,
+            before_source: JSON.stringify(oldRole)
+        }
+
+        const rows = await this.ctx.model.transaction(async (t) => {
+            let rows = await this.ctx.model.Role.destroy({where: { id: oldRole.id }, transaction: t});
+            await this.ctx.model.RolePermission.destroy({where: { role_id: oldRole.id } }, { transaction: t });
+            await this.ctx.model.AppLog.create(patchInfo);
+            return rows;
+        });
+        return helpers.SequelizeUpdateResu(rows);
+    }
+
     async addAppRolePermission({ appid, role_code, permission_code }) {
         const app = await this.ctx.service.app.findOne(appid);
         if (!app) {
