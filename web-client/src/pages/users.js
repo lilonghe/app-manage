@@ -119,7 +119,7 @@ export default class User extends Component {
                 return <div className={styles.action}>
                     <Icon type="edit" onClick={() => this.editUser(record.id)}/>
                     <Icon type="project" onClick={() => this.editUserPerms(record.id)}>编辑权限</Icon>
-                    <Icon type="delete">删除</Icon>
+                    {/* <Icon type="delete">删除</Icon> */}
                 </div>
             }},
         ]

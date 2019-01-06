@@ -90,7 +90,7 @@ class RoleService extends Service {
     }
 
     async removeAppRole({ appid, code }) {
-        const app = await this.ctx.service.app.findOne(data.appid);
+        const app = await this.ctx.service.app.findOne(appid);
         if (!app) {
             return errors.ErrAppNotFound;
         }

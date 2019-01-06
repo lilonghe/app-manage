@@ -26,7 +26,10 @@ export function turnLogsActionToView(action) {
         "add": "添加",
         "edit": "编辑",
         "edit_role": "编辑角色",
-        "set_permission": "设置权限"
+        "set_permission": "设置权限",
+        "delete_permission": "移除权限",
+        "delete_role": "移除角色",
+        "delete": "移除"
     }
 
     return actionMap[action] || action;

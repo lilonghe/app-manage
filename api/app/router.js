@@ -14,7 +14,7 @@ module.exports = app => {
   router.get('/permissions', controller.permission.getAppSchema);
   router.post('/permissions', controller.permission.addPermission);
   router.put('/permissions', controller.permission.editPermission);
-  router.delete('/permissions', controller.permission.deletePermission);
+  router.delete('/permissions', controller.permission.removePermission);
 
   router.get('/roles', controller.permission.getAppRoles);
   router.post('/roles', controller.permission.addAppRole);

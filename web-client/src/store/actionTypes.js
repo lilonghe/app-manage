@@ -13,5 +13,7 @@ export default {
     toggleShowEditUserPermission: 'toggleShowEditUserPermission',
     onChangeTargetUser: 'onChangeTargetUser',
     onAddUserRole:'onAddUserRole',
-    onRemoveUserRole: 'onRemoveUserRole'
+    onRemoveUserRole: 'onRemoveUserRole',
+    onRemoveAppPermission: 'onRemoveAppPermission',
+    onRemoveAppRole: 'onRemoveAppRole'
 };

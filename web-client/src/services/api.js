@@ -75,3 +75,11 @@ export function getAppLogs() {
 export function getUserLogs() {
     return request(`logs/users`, {method: 'get'});
 }
+
+export function removeAppPermission(data) {
+    return request(`permissions`, {method: 'delete', body: JSON.stringify(data)});
+}
+
+export function removeAppRole(data) {
+    return request(`roles`, {method: 'delete', body: JSON.stringify(data)});
+}

@@ -3,14 +3,14 @@ import { Select, Form, Icon, Input, Button, Checkbox, Popconfirm, Table, message
 import { connect } from 'react-redux';
 const FormItem = Form.Item;
 const  { Column } = Table.Column;
-import { fetchAppRolesAction,addAppRoleAction,editAppRoleAction, editAppRolePermissionAction } from '../../store/action';
+import { fetchAppRolesAction,addAppRoleAction,editAppRoleAction, editAppRolePermissionAction, removeAppRoleAction } from '../../store/action';
 import RoleForm from '../../components/app/role/roleForm';
 import RolePermission from '../../components/app/role/rolePermission';
 
 @connect(({ appDetail }) => {
     return { appDetail }
 }, {
-    fetchAppRolesAction, addAppRoleAction,editAppRoleAction, editAppRolePermissionAction
+    fetchAppRolesAction, addAppRoleAction,editAppRoleAction, editAppRolePermissionAction, removeAppRoleAction
 })
 export default class role extends Component {
 
@@ -120,6 +120,11 @@ export default class role extends Component {
         })
     }
 
+    removeRole = (code) => {
+        const { appDetail: { appid } } = this.props;
+        this.props.removeAppRoleAction({code, appid});
+    }
+
     render() {
         const { appDetail: { roles } } = this.props;
         const {targetRole} = this.state;
@@ -140,7 +145,7 @@ export default class role extends Component {
                             <div style={{width: 20, display:'inline-block'}}></div>
                             <Tooltip title="编辑角色权限"><Icon type="project" theme="outlined" style={{cursor: 'pointer'}} onClick={() => this.editRolePermission(r.id)}/></Tooltip>
                             <div style={{width: 20, display:'inline-block'}}></div>
-                            <Tooltip title="comming soon..."><Icon type="close" /></Tooltip>
+                            <Popconfirm title="确认移除此角色?" onConfirm={() => this.removeRole(r.code)}><Icon style={{cursor: 'pointer'}} type="close" /></Popconfirm>
                         </div>
                     }} />
                 </Table>

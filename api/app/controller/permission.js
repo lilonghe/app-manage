@@ -69,6 +69,9 @@ class PermissionController extends Controller {
         this.ctx.validate(createRule);
         
         const rows = await this.ctx.service.permission.removePermission(this.ctx.request.body);
+        if (isNaN(rows)) {
+            return rows;
+        }
         return helpers.ActionResult(rows > 0);
     }
 

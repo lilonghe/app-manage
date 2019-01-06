@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
-import { Table, Col, Tabs, Switch, Icon, message, Button, Tooltip } from 'antd';
+import { Table, Col, Tabs, Switch, Icon, message, Button, Tooltip, Popconfirm } from 'antd';
 const { Column } = Table.Column;
 const TabPane = Tabs.TabPane;
 import PermissionForm from '../../components/app/permission/permissionForm';
 import { connect } from 'react-redux';
-import { fetchAppPermissionAction, addAppPermissionAction, editAppPermissionAction } from '../../store/action';
+import { fetchAppPermissionAction, addAppPermissionAction, editAppPermissionAction, removeAppPermissionAction } from '../../store/action';
 import { arrToTree } from '../../utils/tools';
 
 @connect(({ appDetail }) => {
     return { appDetail }
 }, {
-    fetchAppPermissionAction, addAppPermissionAction, editAppPermissionAction
+    fetchAppPermissionAction, addAppPermissionAction, editAppPermissionAction, removeAppPermissionAction
 })
 export default class AppPermission extends Component {
 
@@ -110,6 +110,11 @@ export default class AppPermission extends Component {
         await this.changeTargetPermission(target);
         this.toggleShowPermissionForm();
     }
+    
+    removePermission = (code) => {
+        const { appDetail: { appid } } = this.props;
+        this.props.removeAppPermissionAction({code, appid});
+    }
 
     render() {
         const { appDetail: { permissions } } = this.props;
@@ -124,7 +129,7 @@ export default class AppPermission extends Component {
                 return <div>
                     <Tooltip title="编辑"><Icon type="edit" style={{cursor: 'pointer'}} onClick={() => this.editPermission(record)}/></Tooltip>
                     <div style={{width: 20, display:'inline-block'}}></div>
-                    <Tooltip title="删除"><Icon type="close" style={{cursor: 'pointer'}}/></Tooltip>
+                    <Popconfirm title="确认移除此权限?" onConfirm={() => this.removePermission(record.code)}><Icon type="close" style={{cursor: 'pointer'}}/></Popconfirm>
                 </div>
             }},
 

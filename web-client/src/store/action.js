@@ -1,4 +1,4 @@
-import { getUserAppRoleIds, editAppPermission, fetchApps, fetchApp, fetchAppRoles, addApp,editAppInfo, getAppPermissions, addAppPermission, addAppRole, editAppRole, editAppRolePermission, searchUser, addUser, userAddRole, userRemoveRole, editUser} from '../services/api';
+import { getUserAppRoleIds, editAppPermission, fetchApps, fetchApp, fetchAppRoles, addApp,editAppInfo, getAppPermissions, addAppPermission, addAppRole, editAppRole, editAppRolePermission, searchUser, addUser, userAddRole, userRemoveRole, editUser, removeAppPermission, removeAppRole} from '../services/api';
 import actionTypes from './actionTypes';
 
 export const fetchAppsAction = () => {
@@ -230,5 +230,33 @@ export const  changeTargetUser = (userinfo) => {
             type: actionTypes.onChangeTargetUser,
             value: userinfo
         });
+    };
+}
+
+export const removeAppPermissionAction = (params, cb) => {
+    return async dispatch => {
+        let { err, data } = await removeAppPermission(params);
+        if (!err) {
+            dispatch({
+                type: actionTypes.onRemoveAppPermission,
+                value: params.code
+            });
+            global.actionTip.success(`移除权限成功`);
+            cb && cb({ err, data });
+        }
+    };
+}
+
+export const removeAppRoleAction = (params, cb) => {
+    return async dispatch => {
+        let { err, data } = await removeAppRole(params);
+        if (!err) {
+            dispatch({
+                type: actionTypes.onRemoveAppRole,
+                value: params.code
+            });
+            global.actionTip.success(`移除角色成功`);
+            cb && cb({ err, data });
+        }
     };
 }

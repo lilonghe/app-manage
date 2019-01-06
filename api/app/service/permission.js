@@ -76,7 +76,7 @@ class PermissionService extends Service {
             return errors.ErrAppNotFound;
         }
 
-        const oldPerm = await this.getAppPermissionByCodeAndApp(app.appid, code);
+        const oldPerm = await this.getAppPermissionByCodeAndApp(app.id, code);
         if (!oldPerm) {
             return errors.ErrPermissionCodeNotFound;
         } 
@@ -84,7 +84,7 @@ class PermissionService extends Service {
         let patchInfo = { 
             action_type: 'delete_permission',
             action: 'delete',
-            appid: app.appid,
+            appid: app.id,
             before_source: JSON.stringify(oldPerm)
         }
 
@@ -92,8 +92,8 @@ class PermissionService extends Service {
             // remove permission
             let rows = await this.ctx.model.Permission.destroy({where: { id: oldPerm.id }, transaction: t});
             // remove role permission map item, role patch ?
-            await this.ctx.model.RolePermission.destroy({where: { permission_id: oldPerm.id } }, { transaction: t });
-            await this.ctx.model.AppLog.create(patchInfo);
+            await this.ctx.model.RolePermission.destroy({where: { permission_id: oldPerm.id }, transaction: t });
+            await this.ctx.model.AppLog.create(patchInfo, { transaction: t });
             return rows;
         });
 
