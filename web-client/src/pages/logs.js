@@ -49,6 +49,7 @@ export default class Logs extends Component {
                             <Column title="应用" dataIndex="name"/>
                             <Column title="动作" dataIndex="action" render={t => turnLogsActionToView(t)}/>
                             <Column title="动作类型" dataIndex="action_type" render={t => turnLogsActionToView(t)}/>
+                            <Column title="描述" dataIndex="after" />
                             <Column title="操作时间" dataIndex="created_at"/>
                         </Table>
                     </TabPanel>

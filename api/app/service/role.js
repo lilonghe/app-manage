@@ -77,7 +77,8 @@ class RoleService extends Service {
             action_type: 'edit_role',
             action: 'edit',
             appid: data.appid,
-            before_source: JSON.stringify(oldRole)
+            before_source: JSON.stringify(oldRole),
+            after: `编辑[${role.name}]信息`
         }
 
         let newRole = await this.ctx.model.transaction(async (t) => {
@@ -104,7 +105,8 @@ class RoleService extends Service {
             action_type: 'delete_role',
             action: 'delete',
             appid: oldRole.appid,
-            before_source: JSON.stringify(oldRole)
+            before_source: JSON.stringify(oldRole),
+            after: `移除[${role.name}]角色`
         }
 
         const rows = await this.ctx.model.transaction(async (t) => {
@@ -140,7 +142,8 @@ class RoleService extends Service {
         let patchInfo = { 
             action_type: 'edit_role',
             action: 'add_permission',
-            appid: app.id
+            appid: app.id,
+            after: `添加[${role.name}]角色[${permission.name}]权限`
         }
 
         let newRolePermission = await this.ctx.model.transaction(async (t) => {
@@ -180,7 +183,8 @@ class RoleService extends Service {
             action_type: 'edit_role',
             action: 'remove_permission',
             appid: app.id,
-            before_source: JSON.stringify(repeated)
+            before_source: JSON.stringify(repeated),
+            after: `移除[${oldRole.name}]角色[${permission.name}]权限`
         }
 
         let resu = await this.ctx.model.transaction(async (t) => {
@@ -253,7 +257,8 @@ class RoleService extends Service {
             action_type: 'edit_role',
             action: 'set_permission',
             appid: app.id,
-            after_source: JSON.stringify(permission_codes)
+            after_source: JSON.stringify(permission_codes),
+            after: `编辑[${oldRole.name}]角色权限`
         }
 
         await this.ctx.model.transaction(async (t) => {
