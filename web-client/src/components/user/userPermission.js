@@ -81,7 +81,7 @@ export default class UserPermission extends Component {
                 destroyOnClose={true}
                 visible={showEditUserPermission}
                 onClose={this.closeDrawer}
-                style={{height: '100%', display: 'flex', padding: 15}}>
+                style={{height: '100%', display: 'flex'}}>
                 {roles.length == 0 && <div>应用未创建角色</div>}
                 {roles.length > 0 && <div style={{display: 'flex', flexDirection: 'row', height: '100%', flex: 1}}>
                     <div style={{borderRight: '1px solid #CCC', flex: 1}}>
