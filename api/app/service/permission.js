@@ -29,7 +29,7 @@ class PermissionService extends Service {
             action_type: 'edit_permission',
             action: 'add',
             appid: data.appid,
-            after: `添加[${data.name}]权限`
+            after: `添加[${data.title}]权限`
         }
 
         let newPermission = await this.ctx.model.transaction(async (t) => {
@@ -58,7 +58,7 @@ class PermissionService extends Service {
             action: 'edit',
             appid: data.appid,
             before_source: JSON.stringify(oldPerm),
-            after: `编辑[${oldPerm.name}]权限`
+            after: `编辑[${oldPerm.title}]权限`
         }
 
         data.id = oldPerm.id;
@@ -88,7 +88,7 @@ class PermissionService extends Service {
             action: 'delete',
             appid: app.id,
             before_source: JSON.stringify(oldPerm),
-            after: `移除[${oldPerm.name}]权限`
+            after: `移除[${oldPerm.title}]权限`
         }
 
         let rows =  await this.ctx.model.transaction(async (t) => {
