@@ -6,7 +6,7 @@ class LogService extends Service {
     async getAppLogs({ limit=20, offset=0 }) {
         const Sequelize = this.app.Sequelize;
         const data = await this.ctx.model.query(`
-            SELECT app_logs.id, apps.appid, apps.name, app_logs.action, app_logs.action_type, app_logs.created_at FROM app_logs 
+            SELECT app_logs.id, apps.appid, apps.name, app_logs.action, app_logs.action_type, app_logs.after, app_logs.created_at FROM app_logs 
             left join apps on apps.id = app_logs.appid
             order by created_at desc
             limit ? offset ?
