@@ -73,6 +73,8 @@ export default class UserPermission extends Component {
                 }
             })
         });
+        Object.keys(permissions).map(key => permissions[key].public && (checkedKeysMap[p] = 1));
+        
         checkedKeys = Object.keys(checkedKeysMap);
         return (
             <Drawer
